@@ -51,6 +51,7 @@ class DataStore {
       id: Date.now().toString() + Math.random().toString(36).substr(2, 9),
     };
     this.behaviors.push(newBehavior);
+    console.log("[DataStore] Added behavior:", newBehavior, "Total behaviors:", this.behaviors.length, "Listeners:", this.listeners.size);
     this.notifyListeners();
     return newBehavior;
   }

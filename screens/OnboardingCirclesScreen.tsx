@@ -21,6 +21,7 @@ export default function OnboardingCirclesScreen({
   const store = useDataStore();
 
   const handleAddBehavior = (circleType: CircleType, name: string) => {
+    console.log("[OnboardingScreen] Adding behavior:", circleType, name);
     store.addBehavior({ circleType, name });
   };
 
@@ -36,6 +37,12 @@ export default function OnboardingCirclesScreen({
   const innerBehaviors = store.getBehaviors("inner");
   const middleBehaviors = store.getBehaviors("middle");
   const outerBehaviors = store.getBehaviors("outer");
+  
+  console.log("[OnboardingScreen] Render - behaviors count:", {
+    inner: innerBehaviors.length,
+    middle: middleBehaviors.length,
+    outer: outerBehaviors.length
+  });
 
   const canFinish =
     innerBehaviors.length > 0 ||
