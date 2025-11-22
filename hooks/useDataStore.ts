@@ -1,17 +1,13 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useSyncExternalStore } from "react";
 import { dataStore, CircleType, Behavior } from "@/stores/DataStore";
 
 export function useDataStore() {
-  const [updateCount, setUpdateCount] = useState(0);
-
-  useEffect(() => {
-    const unsubscribe = dataStore.subscribe(() => {
-      setUpdateCount((prev) => prev + 1);
-    });
-    return () => {
-      unsubscribe();
-    };
-  }, []);
+  // Use useSyncExternalStore to reliably subscribe to store changes
+  const version = useSyncExternalStore(
+    (callback) => dataStore.subscribe(callback),
+    () => dataStore.getVersion(),
+    () => dataStore.getVersion()
+  );
 
   return dataStore;
 }

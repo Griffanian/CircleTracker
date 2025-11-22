@@ -34,6 +34,10 @@ export default function HistoryScreen() {
     }
   }, [route.params]);
 
+  const handleDeleteEvent = async (eventId: string) => {
+    await store.deleteEvent(eventId);
+  };
+
   const events = store.getEvents();
   
   const applyFilters = (events: Event[]) => {
@@ -159,7 +163,7 @@ export default function HistoryScreen() {
           .find((b) => b.id === item.behaviorId);
         return (
           <View style={{ marginBottom: Spacing.sm }}>
-            <EventListItem event={item} behavior={behavior} />
+            <EventListItem event={item} behavior={behavior} onDelete={handleDeleteEvent} />
           </View>
         );
       }}

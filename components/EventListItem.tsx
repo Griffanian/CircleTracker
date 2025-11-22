@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, StyleSheet, Pressable } from "react-native";
+import { View, StyleSheet, Pressable, Alert, Platform } from "react-native";
 import { Feather } from "@expo/vector-icons";
 import { ThemedText } from "@/components/ThemedText";
 import { CircleBadge } from "@/components/CircleBadge";
@@ -10,14 +10,36 @@ import { useTheme } from "@/hooks/useTheme";
 interface EventListItemProps {
   event: Event;
   behavior: Behavior | undefined;
+  onDelete: (eventId: string) => void;
 }
 
-export function EventListItem({ event, behavior }: EventListItemProps) {
+export function EventListItem({ event, behavior, onDelete }: EventListItemProps) {
   const { theme } = useTheme();
   const [showNote, setShowNote] = useState(false);
 
   const formatTime = (date: Date): string => {
     return date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+  };
+
+  const handleDelete = () => {
+    if (Platform.OS === "web") {
+      if (window.confirm("Are you sure you want to delete this event?")) {
+        onDelete(event.id);
+      }
+    } else {
+      Alert.alert(
+        "Delete Event",
+        "Are you sure you want to delete this event?",
+        [
+          { text: "Cancel", style: "cancel" },
+          { 
+            text: "Delete", 
+            style: "destructive",
+            onPress: () => onDelete(event.id)
+          },
+        ]
+      );
+    }
   };
 
   return (
@@ -42,21 +64,36 @@ export function EventListItem({ event, behavior }: EventListItemProps) {
             </ThemedText>
           </View>
         </View>
-        {event.note ? (
+        <View style={styles.actionButtons}>
+          {event.note ? (
+            <Pressable
+              onPress={() => setShowNote(!showNote)}
+              style={({ pressed }) => [
+                styles.actionButton,
+                { opacity: pressed ? 0.6 : 1 },
+              ]}
+            >
+              <Feather
+                name={showNote ? "chevron-up" : "file-text"}
+                size={18}
+                color={theme.textSecondary}
+              />
+            </Pressable>
+          ) : null}
           <Pressable
-            onPress={() => setShowNote(!showNote)}
+            onPress={handleDelete}
             style={({ pressed }) => [
-              styles.noteButton,
+              styles.actionButton,
               { opacity: pressed ? 0.6 : 1 },
             ]}
           >
             <Feather
-              name={showNote ? "chevron-up" : "file-text"}
+              name="trash-2"
               size={18}
               color={theme.textSecondary}
             />
           </Pressable>
-        ) : null}
+        </View>
       </View>
       {showNote && event.note ? (
         <View style={[styles.noteContainer, { borderTopColor: theme.border }]}>
@@ -98,7 +135,11 @@ const styles = StyleSheet.create({
     fontSize: 14,
     marginTop: Spacing.xs,
   },
-  noteButton: {
+  actionButtons: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  actionButton: {
     padding: Spacing.sm,
   },
   noteContainer: {

@@ -1,8 +1,8 @@
 # Overview
 
-Circles is a React Native behavioral tracking application built with Expo. It helps users monitor and categorize behaviors across three concentric circles: Inner (harmful behaviors to avoid), Middle (risky behaviors to monitor), and Outer (positive behaviors to encourage). The app provides quick logging, statistics tracking, a "Days Since Inner Circle" counter that displays sobriety duration in compact format (e.g., "1y 2m 5d"), and a chronological history of events.
+Circles is a React Native behavioral tracking application built with Expo. It helps users monitor and categorize behaviors across three concentric circles: Inner (harmful behaviors to avoid), Middle (risky behaviors to monitor), and Outer (positive behaviors to encourage). The app provides quick logging, statistics tracking, a "Days Since Inner Circle" counter that displays sobriety duration in compact format (e.g., "1y 2m 5d"), chronological history of events, and the ability to delete individual logged events.
 
-The application uses a mobile-first design with tab-based navigation and supports iOS, Android, and web platforms. It includes onboarding flows for first-time users, sobriety start date selection (with calendar picker on web, native date picker on mobile), customizable behavior tracking per circle type, and clickable activity summaries that navigate to filtered history views.
+The application uses a mobile-first design with tab-based navigation and supports iOS, Android, and web platforms. It includes onboarding flows for first-time users, sobriety start date selection (with calendar picker on web, native date picker on mobile), customizable behavior tracking per circle type, clickable activity summaries that navigate to filtered history views, and event deletion with confirmation dialogs.
 
 **Days Since Inner Circle Display:**
 - Compact format showing years, months, and days (e.g., "1y 2m 15d", "3m 10d", "20d")
@@ -52,18 +52,27 @@ Preferred communication style: Simple, everyday language.
 
 **Architecture**: Simple observable store pattern without external dependencies
 - **Rationale**: For this app's scope, a lightweight custom store avoids Redux/MobX complexity
-- **Implementation**: Single `DataStore` class with subscription-based updates
-- **Hook Integration**: `useDataStore` hook provides reactive updates through force re-renders
-- **Pros**: No external dependencies, simple debugging, minimal boilerplate
+- **Implementation**: Single `DataStore` class with subscription-based updates and version tracking
+- **Hook Integration**: `useDataStore` hook uses React's `useSyncExternalStore` for reliable re-renders
+- **Version Tracking**: Monotonically increasing version number ensures components detect all store changes
+- **Pros**: No external dependencies, simple debugging, minimal boilerplate, reliable React integration
 - **Cons**: Doesn't scale to complex state trees, manual subscription management
 
 **Data Model**:
 - **Behaviors**: User-defined actions categorized by circle type with optional descriptions
-- **Events**: Timestamped logs linking to behaviors with optional notes
+- **Events**: Timestamped logs linking to behaviors with optional notes (supports deletion)
 - **Preferences**: User settings for UI customization, onboarding state, and sobriety start date
   - `sobrietyStartDate: Date | null` - Tracks when user started their sobriety journey
   - `hasCompletedOnboarding: boolean` - Flags first-time user flow completion
   - `showDaysSinceInner: boolean` - Controls Days Since Inner widget visibility
+  
+**Event Management**:
+- **Deletion**: Users can delete individual events from the history screen
+  - Trash icon on each event triggers platform-specific confirmation dialog
+  - Web: uses `window.confirm()` for native browser confirmation
+  - Native: uses `Alert.alert()` for platform-native confirmation
+  - Immediate UI update after deletion using `useSyncExternalStore`
+  - Persists to local storage automatically
 - **Storage**: Fully implemented using @react-native-async-storage/async-storage
   - **Mobile**: Uses AsyncStorage native module for iOS/Android
   - **Web**: Automatically uses localStorage via built-in web shim

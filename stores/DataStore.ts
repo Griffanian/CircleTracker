@@ -39,6 +39,7 @@ class DataStore {
   };
   private listeners: Set<() => void> = new Set();
   private isInitialized = false;
+  private version = 0;
 
   async initialize() {
     if (this.isInitialized) return;
@@ -105,8 +106,13 @@ class DataStore {
   }
 
   private async notifyListeners() {
+    this.version++;
     this.listeners.forEach((listener) => listener());
     await this.saveToStorage();
+  }
+
+  getVersion(): number {
+    return this.version;
   }
 
   getBehaviors(circleType?: CircleType): Behavior[] {
@@ -152,6 +158,11 @@ class DataStore {
     
     await this.notifyListeners();
     return newEvent;
+  }
+
+  async deleteEvent(id: string) {
+    this.events = this.events.filter((e) => e.id !== id);
+    await this.notifyListeners();
   }
 
   getPreferences(): UserPreferences {
