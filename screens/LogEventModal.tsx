@@ -24,21 +24,22 @@ export default function LogEventModal({ route, navigation }: LogEventModalProps)
   const { circleType } = route.params;
   const { theme } = useTheme();
   const store = useDataStore();
+  const behaviors = store.getBehaviors(circleType);
+  
   const [selectedBehaviorId, setSelectedBehaviorId] = useState<string | null>(
-    null
+    // Auto-select if there's only one behavior
+    behaviors.length === 1 ? behaviors[0].id : null
   );
   const [note, setNote] = useState("");
 
-  const behaviors = store.getBehaviors(circleType);
-
-  const handleCreateCustomBehavior = (name: string) => {
-    const newBehavior = store.addBehavior({ circleType, name });
+  const handleCreateCustomBehavior = async (name: string) => {
+    const newBehavior = await store.addBehavior({ circleType, name });
     setSelectedBehaviorId(newBehavior.id);
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
     if (selectedBehaviorId) {
-      store.addEvent({
+      await store.addEvent({
         behaviorId: selectedBehaviorId,
         circleType,
         note: note.trim() || undefined,

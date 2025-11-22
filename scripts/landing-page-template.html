@@ -99,6 +99,43 @@
         font-size: 14px;
         margin-bottom: 10px;
       }
+      .web-button {
+        display: inline-block;
+        padding: 16px 32px;
+        margin: 20px auto 30px;
+        font-size: 18px;
+        font-weight: 600;
+        border: 2px solid #2A9D8F;
+        border-radius: 8px;
+        text-decoration: none;
+        color: white;
+        background: #2A9D8F;
+        transition: background 0.2s;
+      }
+      .web-button:hover {
+        background: #238276;
+      }
+      .divider {
+        margin: 40px 0 30px;
+        text-align: center;
+        color: #999;
+        font-size: 14px;
+        position: relative;
+      }
+      .divider::before {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 0;
+        right: 0;
+        height: 1px;
+        background: #ddd;
+      }
+      .divider span {
+        background: white;
+        padding: 0 15px;
+        position: relative;
+      }
     </style>
   </head>
   <body>
@@ -108,6 +145,15 @@
     </div>
 
     <div class="content" id="content">
+      <h1 style="font-size: 32px; margin-bottom: 10px;">Circles</h1>
+      <p style="color: #666; margin-bottom: 20px;">Behavioral Tracking App</p>
+      
+      <a href="BASE_URL_PLACEHOLDER/web/index.html" class="web-button">
+        🌐 Use Web Version
+      </a>
+
+      <div class="divider"><span>OR USE MOBILE APP</span></div>
+
       <div class="qr-code">
         <img
           src="https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=BASE_URL_PLACEHOLDER"

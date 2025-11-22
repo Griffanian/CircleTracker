@@ -29,12 +29,12 @@ export default function OnboardingCirclesScreen({
   const [showDatePicker, setShowDatePicker] = useState(false);
   const dateInputRef = useRef<HTMLInputElement>(null);
 
-  const handleAddBehavior = (circleType: CircleType, name: string) => {
-    store.addBehavior({ circleType, name });
+  const handleAddBehavior = async (circleType: CircleType, name: string) => {
+    await store.addBehavior({ circleType, name });
   };
 
-  const handleDeleteBehavior = (id: string) => {
-    store.deleteBehavior(id);
+  const handleDeleteBehavior = async (id: string) => {
+    await store.deleteBehavior(id);
   };
 
   const handleDateChange = (event: any, selectedDate?: Date) => {
@@ -44,11 +44,11 @@ export default function OnboardingCirclesScreen({
     }
   };
 
-  const handleFinish = () => {
+  const handleFinish = async () => {
     let finalSobrietyDate = sobrietyDate;
     
-    // Fallback: if on web and state is null, check the input value directly
-    if (Platform.OS === "web" && !finalSobrietyDate && dateInputRef.current) {
+    // On web, always check the input value directly (in case onChange didn't fire)
+    if (Platform.OS === "web" && dateInputRef.current) {
       const inputValue = dateInputRef.current.value;
       if (inputValue) {
         const [year, month, day] = inputValue.split("-").map(Number);
@@ -56,10 +56,13 @@ export default function OnboardingCirclesScreen({
         if (!isNaN(parsed.getTime())) {
           finalSobrietyDate = parsed;
         }
+      } else {
+        // If input is empty, use null
+        finalSobrietyDate = null;
       }
     }
     
-    store.updatePreferences({ 
+    await store.updatePreferences({ 
       hasCompletedOnboarding: true,
       sobrietyStartDate: finalSobrietyDate,
     });

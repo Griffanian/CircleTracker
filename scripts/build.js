@@ -412,6 +412,48 @@ function updateManifests(manifests, timestamp, baseUrl, assetsByHash) {
   console.log("Manifests updated");
 }
 
+async function exportWeb() {
+  console.log("Exporting web version...");
+  
+  return new Promise((resolve, reject) => {
+    const webExport = spawn("npx", ["expo", "export:web"], {
+      stdio: "inherit",
+      shell: true,
+    });
+
+    webExport.on("close", (code) => {
+      if (code === 0) {
+        console.log("Web export complete");
+        resolve();
+      } else {
+        reject(new Error(`Web export failed with code ${code}`));
+      }
+    });
+
+    webExport.on("error", (error) => {
+      reject(error);
+    });
+  });
+}
+
+function copyWebBuild() {
+  console.log("Copying web build...");
+  
+  const webDistPath = path.join("dist");
+  const webBuildPath = path.join("static-build", "web");
+
+  if (!fs.existsSync(webDistPath)) {
+    throw new Error("Web dist directory not found");
+  }
+
+  if (fs.existsSync(webBuildPath)) {
+    fs.rmSync(webBuildPath, { recursive: true });
+  }
+
+  fs.cpSync(webDistPath, webBuildPath, { recursive: true });
+  console.log("Web build copied");
+}
+
 function createLandingPage(baseUrl) {
   const expsUrl = baseUrl.replace("https://", "");
   const template = fs.readFileSync(
@@ -461,6 +503,16 @@ async function main() {
 
   console.log("Updating manifests and creating landing page...");
   updateManifests(manifests, timestamp, baseUrl, assetsByHash);
+
+  console.log("Building web version...");
+  try {
+    await exportWeb();
+    copyWebBuild();
+  } catch (error) {
+    console.error("Web build failed:", error.message);
+    console.log("Continuing without web version...");
+  }
+
   createLandingPage(baseUrl);
 
   console.log("Build complete! Deploy to:", baseUrl);

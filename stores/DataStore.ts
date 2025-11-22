@@ -1,3 +1,5 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 export type CircleType = "inner" | "middle" | "outer";
 
 export interface Behavior {
@@ -21,6 +23,12 @@ export interface UserPreferences {
   sobrietyStartDate: Date | null;
 }
 
+const STORAGE_KEYS = {
+  BEHAVIORS: '@circles/behaviors',
+  EVENTS: '@circles/events',
+  PREFERENCES: '@circles/preferences',
+};
+
 class DataStore {
   private behaviors: Behavior[] = [];
   private events: Event[] = [];
@@ -30,14 +38,75 @@ class DataStore {
     sobrietyStartDate: null,
   };
   private listeners: Set<() => void> = new Set();
+  private isInitialized = false;
+
+  async initialize() {
+    if (this.isInitialized) return;
+    
+    try {
+      await this.loadFromStorage();
+      this.isInitialized = true;
+    } catch (error) {
+      console.error('Failed to initialize DataStore:', error);
+    }
+  }
+
+  private async loadFromStorage() {
+    try {
+      const [behaviorsJson, eventsJson, preferencesJson] = await Promise.all([
+        AsyncStorage.getItem(STORAGE_KEYS.BEHAVIORS),
+        AsyncStorage.getItem(STORAGE_KEYS.EVENTS),
+        AsyncStorage.getItem(STORAGE_KEYS.PREFERENCES),
+      ]);
+
+      if (behaviorsJson) {
+        this.behaviors = JSON.parse(behaviorsJson);
+      }
+
+      if (eventsJson) {
+        const parsedEvents = JSON.parse(eventsJson);
+        this.events = parsedEvents.map((e: Event) => ({
+          ...e,
+          timestamp: new Date(e.timestamp),
+        }));
+      }
+
+      if (preferencesJson) {
+        const parsedPrefs = JSON.parse(preferencesJson);
+        this.preferences = {
+          ...parsedPrefs,
+          sobrietyStartDate: parsedPrefs.sobrietyStartDate 
+            ? new Date(parsedPrefs.sobrietyStartDate) 
+            : null,
+        };
+      }
+    } catch (error) {
+      console.error('Failed to load data from storage:', error);
+    }
+  }
+
+  private async saveToStorage() {
+    if (!this.isInitialized) return;
+
+    try {
+      await Promise.all([
+        AsyncStorage.setItem(STORAGE_KEYS.BEHAVIORS, JSON.stringify(this.behaviors)),
+        AsyncStorage.setItem(STORAGE_KEYS.EVENTS, JSON.stringify(this.events)),
+        AsyncStorage.setItem(STORAGE_KEYS.PREFERENCES, JSON.stringify(this.preferences)),
+      ]);
+    } catch (error) {
+      console.error('Failed to save data to storage:', error);
+    }
+  }
 
   subscribe(listener: () => void) {
     this.listeners.add(listener);
     return () => this.listeners.delete(listener);
   }
 
-  private notifyListeners() {
+  private async notifyListeners() {
     this.listeners.forEach((listener) => listener());
+    await this.saveToStorage();
   }
 
   getBehaviors(circleType?: CircleType): Behavior[] {
@@ -47,19 +116,19 @@ class DataStore {
     return this.behaviors;
   }
 
-  addBehavior(behavior: Omit<Behavior, "id">): Behavior {
+  async addBehavior(behavior: Omit<Behavior, "id">): Promise<Behavior> {
     const newBehavior: Behavior = {
       ...behavior,
       id: Date.now().toString() + Math.random().toString(36).substr(2, 9),
     };
     this.behaviors.push(newBehavior);
-    this.notifyListeners();
+    await this.notifyListeners();
     return newBehavior;
   }
 
-  deleteBehavior(id: string) {
+  async deleteBehavior(id: string) {
     this.behaviors = this.behaviors.filter((b) => b.id !== id);
-    this.notifyListeners();
+    await this.notifyListeners();
   }
 
   getEvents(): Event[] {
@@ -68,7 +137,7 @@ class DataStore {
     );
   }
 
-  addEvent(event: Omit<Event, "id" | "timestamp">): Event {
+  async addEvent(event: Omit<Event, "id" | "timestamp">): Promise<Event> {
     const newEvent: Event = {
       ...event,
       id: Date.now().toString() + Math.random().toString(36).substr(2, 9),
@@ -81,7 +150,7 @@ class DataStore {
       this.preferences.sobrietyStartDate = new Date();
     }
     
-    this.notifyListeners();
+    await this.notifyListeners();
     return newEvent;
   }
 
@@ -89,9 +158,9 @@ class DataStore {
     return { ...this.preferences };
   }
 
-  updatePreferences(updates: Partial<UserPreferences>) {
+  async updatePreferences(updates: Partial<UserPreferences>) {
     this.preferences = { ...this.preferences, ...updates };
-    this.notifyListeners();
+    await this.notifyListeners();
   }
 
   getLastInnerEvent(): Event | null {

@@ -24,7 +24,16 @@ export function DaysSinceInnerWidget({
       return 0;
     }
     const now = new Date();
-    const diff = now.getTime() - sobrietyStartDate.getTime();
+    // Ensure we're working with a Date object
+    const start = sobrietyStartDate instanceof Date 
+      ? sobrietyStartDate 
+      : new Date(sobrietyStartDate);
+    
+    if (isNaN(start.getTime())) {
+      return 0;
+    }
+    
+    const diff = now.getTime() - start.getTime();
     return Math.floor(diff / (1000 * 60 * 60 * 24));
   };
 
@@ -36,7 +45,15 @@ export function DaysSinceInnerWidget({
     }
 
     const now = new Date();
-    const start = sobrietyStartDate;
+    // Ensure we're working with a Date object, not a string
+    const start = sobrietyStartDate instanceof Date 
+      ? sobrietyStartDate 
+      : new Date(sobrietyStartDate);
+
+    // Validate the date is valid
+    if (isNaN(start.getTime())) {
+      return "0d";
+    }
 
     // Calculate year/month/day differences
     let years = now.getFullYear() - start.getFullYear();

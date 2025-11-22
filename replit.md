@@ -64,9 +64,20 @@ Preferred communication style: Simple, everyday language.
   - `sobrietyStartDate: Date | null` - Tracks when user started their sobriety journey
   - `hasCompletedOnboarding: boolean` - Flags first-time user flow completion
   - `showDaysSinceInner: boolean` - Controls Days Since Inner widget visibility
-- **Storage**: Currently in-memory only (no persistence implemented yet)
+- **Storage**: Fully implemented using @react-native-async-storage/async-storage
+  - **Mobile**: Uses AsyncStorage native module for iOS/Android
+  - **Web**: Automatically uses localStorage via built-in web shim
+  - **Keys**: '@circles/behaviors', '@circles/events', '@circles/preferences'
+  - **Persistence**: All data (behaviors, events, preferences) persists across app restarts and page reloads
+  - **Implementation**: Asynchronous save operations are properly awaited to prevent race conditions
 
-**Future Considerations**: AsyncStorage for local persistence, potential cloud sync if authentication is added
+**Persistence Implementation Details**:
+- **Async Methods**: All DataStore mutating methods (addEvent, addBehavior, deleteBehavior, updatePreferences) are async and await saveToStorage()
+- **Date Handling**: Dates are serialized to ISO strings and properly deserialized back to Date objects on load
+- **Error Handling**: Try-catch blocks prevent crashes if localStorage is unavailable (private browsing, quota exceeded)
+- **Cross-Platform**: Works identically on iOS, Android, and web without platform-specific code
+
+**Future Considerations**: Potential cloud sync if authentication is added, export/import functionality
 
 ## Module Organization
 

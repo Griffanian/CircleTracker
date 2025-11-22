@@ -13,8 +13,8 @@ export default function SettingsScreen() {
   const navigation = useNavigation();
   const preferences = store.getPreferences();
 
-  const handleToggleShowDays = (value: boolean) => {
-    store.updatePreferences({ showDaysSinceInner: value });
+  const handleToggleShowDays = async (value: boolean) => {
+    await store.updatePreferences({ showDaysSinceInner: value });
   };
 
   const handleEditCircles = () => {
