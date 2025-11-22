@@ -5,9 +5,9 @@ const fs = require('fs');
 const path = require('path');
 
 console.log('Building Circles web app...');
-console.log('Step 1/2: Running expo export:web...');
+console.log('Step 1/2: Exporting web platform...');
 
-const build = spawn('npx', ['expo', 'export:web'], {
+const build = spawn('npx', ['expo', 'export', '--platform', 'web'], {
   stdio: 'inherit',
   shell: true
 });
