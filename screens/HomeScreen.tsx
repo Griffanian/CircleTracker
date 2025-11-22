@@ -6,7 +6,7 @@ import { DaysSinceInnerWidget } from "@/components/DaysSinceInnerWidget";
 import { SobrietyDurationWidget } from "@/components/SobrietyDurationWidget";
 import { ConcentriCircles } from "@/components/ConcentriCircles";
 import { TodaySummary } from "@/components/TodaySummary";
-import { useDataStore, useTodayEventCounts, useLastInnerEvent } from "@/hooks/useDataStore";
+import { useTodayEventCounts, useLastInnerEvent, usePreferences } from "@/hooks/useDataStore";
 import { CircleType } from "@/stores/DataStore";
 import { Spacing } from "@/constants/theme";
 import { HomeStackParamList } from "@/navigation/HomeStackNavigator";
@@ -16,22 +16,21 @@ type HomeScreenProps = {
 };
 
 export default function HomeScreen({ navigation }: HomeScreenProps) {
-  const store = useDataStore();
   const todayCounts = useTodayEventCounts();
   const lastInnerEvent = useLastInnerEvent();
+  const preferences = usePreferences();
 
   useEffect(() => {
-    const preferences = store.getPreferences();
     if (!preferences.hasCompletedOnboarding) {
       navigation.navigate("OnboardingCircles");
     }
-  }, []);
+  }, [preferences.hasCompletedOnboarding, navigation]);
 
   const handleLogPress = (circleType: CircleType) => {
     navigation.navigate("LogEvent", { circleType });
   };
-
-  const preferences = store.getPreferences();
+  
+  console.log("[HomeScreen] Rendering with sobrietyStartDate:", preferences.sobrietyStartDate);
 
   return (
     <ScreenScrollView>

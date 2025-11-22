@@ -91,3 +91,23 @@ export function useEventCountsForPeriod(days: number): { inner: number; middle: 
 
   return counts;
 }
+
+export function usePreferences() {
+  const [preferences, setPreferences] = useState(() => dataStore.getPreferences());
+
+  useEffect(() => {
+    setPreferences(dataStore.getPreferences());
+    
+    const unsubscribe = dataStore.subscribe(() => {
+      const newPreferences = dataStore.getPreferences();
+      console.log("[usePreferences] Received update from DataStore:", newPreferences);
+      setPreferences(newPreferences);
+    });
+    
+    return () => {
+      unsubscribe();
+    };
+  }, []);
+
+  return preferences;
+}

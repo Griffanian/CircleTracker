@@ -84,7 +84,9 @@ class DataStore {
   }
 
   updatePreferences(updates: Partial<UserPreferences>) {
+    console.log("[DataStore] updatePreferences called with:", updates);
     this.preferences = { ...this.preferences, ...updates };
+    console.log("[DataStore] preferences after update:", this.preferences);
     this.notifyListeners();
   }
 

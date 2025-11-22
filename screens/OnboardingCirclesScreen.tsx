@@ -1,12 +1,12 @@
 import React, { useState } from "react";
-import { View, StyleSheet, Pressable, Platform } from "react-native";
+import { View, StyleSheet, Pressable, Platform, TextInput, Modal } from "react-native";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { ThemedText } from "@/components/ThemedText";
 import { ScreenScrollView } from "@/components/ScreenScrollView";
 import { CircleBehaviorEditor } from "@/components/CircleBehaviorEditor";
 import { CirclesExplanation } from "@/components/CirclesExplanation";
-import { useDataStore, useBehaviors } from "@/hooks/useDataStore";
+import { useDataStore, useBehaviors, usePreferences } from "@/hooks/useDataStore";
 import { CircleType } from "@/stores/DataStore";
 import { Spacing, BorderRadius } from "@/constants/theme";
 import { useTheme } from "@/hooks/useTheme";
@@ -21,8 +21,8 @@ export default function OnboardingCirclesScreen({
 }: OnboardingCirclesScreenProps) {
   const { theme } = useTheme();
   const store = useDataStore();
+  const preferences = usePreferences();
   
-  const preferences = store.getPreferences();
   const [sobrietyDate, setSobrietyDate] = useState<Date | null>(
     preferences.sobrietyStartDate
   );
@@ -44,10 +44,12 @@ export default function OnboardingCirclesScreen({
   };
 
   const handleFinish = () => {
+    console.log("[OnboardingCircles] handleFinish called with sobrietyDate:", sobrietyDate);
     store.updatePreferences({ 
       hasCompletedOnboarding: true,
       sobrietyStartDate: sobrietyDate,
     });
+    console.log("[OnboardingCircles] Preferences updated, navigating back");
     navigation.goBack();
   };
 
@@ -113,36 +115,95 @@ export default function OnboardingCirclesScreen({
           When did you start your journey? This is optional but helps you track how far you've already come.
         </ThemedText>
 
-        <Pressable
-          onPress={() => setShowDatePicker(true)}
-          style={({ pressed }) => [
-            styles.dateButton,
-            {
-              backgroundColor: theme.backgroundDefault,
-              borderColor: theme.border,
-              opacity: pressed ? 0.7 : 1,
-            },
-          ]}
-        >
-          <ThemedText style={{ color: sobrietyDate ? theme.text : theme.textSecondary }}>
-            {sobrietyDate
-              ? sobrietyDate.toLocaleDateString(undefined, {
+        {Platform.OS === "web" ? (
+          <View>
+            <TextInput
+              style={[
+                styles.dateInput,
+                {
+                  backgroundColor: theme.backgroundDefault,
+                  borderColor: theme.border,
+                  color: theme.text,
+                },
+              ]}
+              placeholder="YYYY-MM-DD (e.g., 2024-01-15)"
+              placeholderTextColor={theme.textSecondary}
+              value={
+                sobrietyDate
+                  ? sobrietyDate.toISOString().split("T")[0]
+                  : ""
+              }
+              onChangeText={(text) => {
+                console.log("[OnboardingCircles] Date input changed:", text);
+                if (text === "") {
+                  console.log("[OnboardingCircles] Clearing sobriety date");
+                  setSobrietyDate(null);
+                  return;
+                }
+                
+                if (text.length === 10 && /^\d{4}-\d{2}-\d{2}$/.test(text)) {
+                  const [year, month, day] = text.split("-").map(Number);
+                  const parsed = new Date(year, month - 1, day);
+                  
+                  if (!isNaN(parsed.getTime())) {
+                    console.log("[OnboardingCircles] Setting sobriety date:", parsed);
+                    setSobrietyDate(parsed);
+                  } else {
+                    console.log("[OnboardingCircles] Invalid date parsed");
+                  }
+                } else {
+                  console.log("[OnboardingCircles] Date format invalid or incomplete");
+                }
+              }}
+            />
+            {sobrietyDate ? (
+              <ThemedText
+                style={[styles.datePreview, { color: theme.textSecondary }]}
+              >
+                {sobrietyDate.toLocaleDateString(undefined, {
                   year: "numeric",
                   month: "long",
                   day: "numeric",
-                })
-              : "Select a date (optional)"}
-          </ThemedText>
-        </Pressable>
+                })}
+              </ThemedText>
+            ) : null}
+          </View>
+        ) : (
+          <>
+            <Pressable
+              onPress={() => setShowDatePicker(true)}
+              style={({ pressed }) => [
+                styles.dateButton,
+                {
+                  backgroundColor: theme.backgroundDefault,
+                  borderColor: theme.border,
+                  opacity: pressed ? 0.7 : 1,
+                },
+              ]}
+            >
+              <ThemedText
+                style={{ color: sobrietyDate ? theme.text : theme.textSecondary }}
+              >
+                {sobrietyDate
+                  ? sobrietyDate.toLocaleDateString(undefined, {
+                      year: "numeric",
+                      month: "long",
+                      day: "numeric",
+                    })
+                  : "Select a date (optional)"}
+              </ThemedText>
+            </Pressable>
 
-        {showDatePicker && (
-          <DateTimePicker
-            value={sobrietyDate || new Date()}
-            mode="date"
-            display={Platform.OS === "ios" ? "spinner" : "default"}
-            onChange={handleDateChange}
-            maximumDate={new Date()}
-          />
+            {showDatePicker ? (
+              <DateTimePicker
+                value={sobrietyDate || new Date()}
+                mode="date"
+                display={Platform.OS === "ios" ? "spinner" : "default"}
+                onChange={handleDateChange}
+                maximumDate={new Date()}
+              />
+            ) : null}
+          </>
         )}
 
         <View style={styles.divider} />
@@ -211,6 +272,19 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     paddingHorizontal: Spacing.md,
     justifyContent: "center",
+    marginBottom: Spacing.md,
+  },
+  dateInput: {
+    height: 48,
+    borderRadius: BorderRadius.sm,
+    borderWidth: 1,
+    paddingHorizontal: Spacing.md,
+    fontSize: 16,
+    marginBottom: Spacing.sm,
+  },
+  datePreview: {
+    fontSize: 14,
+    textAlign: "center",
     marginBottom: Spacing.md,
   },
   editors: {
