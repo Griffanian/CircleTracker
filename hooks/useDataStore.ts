@@ -35,3 +35,39 @@ export function useBehaviors(circleType?: CircleType): Behavior[] {
 
   return behaviors;
 }
+
+export function useTodayEventCounts(): { inner: number; middle: number; outer: number } {
+  const [counts, setCounts] = useState(() => dataStore.getTodayEventCounts());
+
+  useEffect(() => {
+    setCounts(dataStore.getTodayEventCounts());
+    
+    const unsubscribe = dataStore.subscribe(() => {
+      setCounts(dataStore.getTodayEventCounts());
+    });
+    
+    return () => {
+      unsubscribe();
+    };
+  }, []);
+
+  return counts;
+}
+
+export function useLastInnerEvent() {
+  const [lastEvent, setLastEvent] = useState(() => dataStore.getLastInnerEvent());
+
+  useEffect(() => {
+    setLastEvent(dataStore.getLastInnerEvent());
+    
+    const unsubscribe = dataStore.subscribe(() => {
+      setLastEvent(dataStore.getLastInnerEvent());
+    });
+    
+    return () => {
+      unsubscribe();
+    };
+  }, []);
+
+  return lastEvent;
+}

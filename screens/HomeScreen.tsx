@@ -5,7 +5,7 @@ import { ScreenScrollView } from "@/components/ScreenScrollView";
 import { DaysSinceInnerWidget } from "@/components/DaysSinceInnerWidget";
 import { ConcentriCircles } from "@/components/ConcentriCircles";
 import { TodaySummary } from "@/components/TodaySummary";
-import { useDataStore } from "@/hooks/useDataStore";
+import { useDataStore, useTodayEventCounts, useLastInnerEvent } from "@/hooks/useDataStore";
 import { CircleType } from "@/stores/DataStore";
 import { Spacing } from "@/constants/theme";
 import { HomeStackParamList } from "@/navigation/HomeStackNavigator";
@@ -16,6 +16,8 @@ type HomeScreenProps = {
 
 export default function HomeScreen({ navigation }: HomeScreenProps) {
   const store = useDataStore();
+  const todayCounts = useTodayEventCounts();
+  const lastInnerEvent = useLastInnerEvent();
 
   useEffect(() => {
     const preferences = store.getPreferences();
@@ -29,8 +31,6 @@ export default function HomeScreen({ navigation }: HomeScreenProps) {
   };
 
   const preferences = store.getPreferences();
-  const lastInnerEvent = store.getLastInnerEvent();
-  const todayCounts = store.getTodayEventCounts();
 
   return (
     <ScreenScrollView>
