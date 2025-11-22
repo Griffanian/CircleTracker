@@ -5,11 +5,12 @@ import { useTheme } from "@/hooks/useTheme";
 import { useScreenInsets } from "@/hooks/useScreenInsets";
 import { Spacing } from "@/constants/theme";
 
-export function ScreenSectionList<T>({
+export function ScreenSectionList<ItemT, SectionT = any>({
   contentContainerStyle,
   style,
+  stickySectionHeadersEnabled = true,
   ...sectionListProps
-}: SectionListProps<T>) {
+}: SectionListProps<ItemT, SectionT>) {
   const { theme } = useTheme();
   const { paddingTop, paddingBottom, scrollInsetBottom } = useScreenInsets();
 
@@ -29,6 +30,7 @@ export function ScreenSectionList<T>({
         contentContainerStyle,
       ]}
       scrollIndicatorInsets={{ bottom: scrollInsetBottom }}
+      stickySectionHeadersEnabled={stickySectionHeadersEnabled}
       {...sectionListProps}
     />
   );

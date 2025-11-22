@@ -13,6 +13,11 @@ import { MainTabParamList } from "@/navigation/MainTabNavigator";
 type FilterType = "all" | CircleType;
 type DaysFilterType = 7 | 30 | "all";
 
+type EventSection = {
+  title: string;
+  data: Event[];
+};
+
 export default function HistoryScreen() {
   const { theme } = useTheme();
   const store = useDataStore();
@@ -145,10 +150,10 @@ export default function HistoryScreen() {
   );
 
   return (
-    <ScreenSectionList
+    <ScreenSectionList<Event, EventSection>
       sections={sections}
-      keyExtractor={(item: Event) => item.id}
-      renderItem={({ item }: { item: Event }) => {
+      keyExtractor={(item) => item.id}
+      renderItem={({ item }) => {
         const behavior = store
           .getBehaviors()
           .find((b) => b.id === item.behaviorId);
