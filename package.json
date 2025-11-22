@@ -10,8 +10,13 @@
     "web": "npx expo start --web",
     "lint": "npx expo lint",
     "check:format": "prettier --check \"**/*.{js,ts,tsx,css,json}\"",
-    "format": "prettier --write \"**/*.{js,ts,tsx,css,json}\""
+    "format": "prettier --write \"**/*.{js,ts,tsx,css,json}\"",
+    "install-deps": "npm ci || npm install",
+    "build:web": "npx expo export --output-dir web-build -p web",
+    "build": "npm run build:web",
+    "deploy": "echo \"Deployment is handled by GitHub Actions (see .github/workflows/deploy.yml)\""
   },
+  "homepage": "https://Griffanian.github.io/CircleTracker",
   "dependencies": {
     "@expo/vector-icons": "^15.0.2",
     "@react-native-community/datetimepicker": "^8.5.0",
