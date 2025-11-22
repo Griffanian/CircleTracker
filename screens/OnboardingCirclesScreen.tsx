@@ -1,5 +1,6 @@
-import React from "react";
-import { View, StyleSheet, Pressable } from "react-native";
+import React, { useState } from "react";
+import { View, StyleSheet, Pressable, Platform } from "react-native";
+import DateTimePicker from "@react-native-community/datetimepicker";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { ThemedText } from "@/components/ThemedText";
 import { ScreenScrollView } from "@/components/ScreenScrollView";
@@ -20,6 +21,12 @@ export default function OnboardingCirclesScreen({
 }: OnboardingCirclesScreenProps) {
   const { theme } = useTheme();
   const store = useDataStore();
+  
+  const preferences = store.getPreferences();
+  const [sobrietyDate, setSobrietyDate] = useState<Date | null>(
+    preferences.sobrietyStartDate
+  );
+  const [showDatePicker, setShowDatePicker] = useState(false);
 
   const handleAddBehavior = (circleType: CircleType, name: string) => {
     store.addBehavior({ circleType, name });
@@ -29,8 +36,18 @@ export default function OnboardingCirclesScreen({
     store.deleteBehavior(id);
   };
 
+  const handleDateChange = (event: any, selectedDate?: Date) => {
+    setShowDatePicker(Platform.OS === "ios");
+    if (selectedDate) {
+      setSobrietyDate(selectedDate);
+    }
+  };
+
   const handleFinish = () => {
-    store.updatePreferences({ hasCompletedOnboarding: true });
+    store.updatePreferences({ 
+      hasCompletedOnboarding: true,
+      sobrietyStartDate: sobrietyDate,
+    });
     navigation.goBack();
   };
 
@@ -63,6 +80,45 @@ export default function OnboardingCirclesScreen({
         </ThemedText>
 
         <CirclesExplanation />
+
+        <View style={styles.divider} />
+
+        <ThemedText style={styles.title}>Sobriety Start Date</ThemedText>
+        <ThemedText style={[styles.description, { color: theme.textSecondary }]}>
+          When did you start your sobriety journey? This is optional but helps you track your progress.
+        </ThemedText>
+
+        <Pressable
+          onPress={() => setShowDatePicker(true)}
+          style={({ pressed }) => [
+            styles.dateButton,
+            {
+              backgroundColor: theme.backgroundDefault,
+              borderColor: theme.border,
+              opacity: pressed ? 0.7 : 1,
+            },
+          ]}
+        >
+          <ThemedText style={{ color: sobrietyDate ? theme.text : theme.textSecondary }}>
+            {sobrietyDate
+              ? sobrietyDate.toLocaleDateString(undefined, {
+                  year: "numeric",
+                  month: "long",
+                  day: "numeric",
+                })
+              : "Select a date (optional)"}
+          </ThemedText>
+        </Pressable>
+
+        {showDatePicker && (
+          <DateTimePicker
+            value={sobrietyDate || new Date()}
+            mode="date"
+            display={Platform.OS === "ios" ? "spinner" : "default"}
+            onChange={handleDateChange}
+            maximumDate={new Date()}
+          />
+        )}
 
         <View style={styles.divider} />
 
@@ -149,6 +205,14 @@ const styles = StyleSheet.create({
     fontSize: 16,
     marginBottom: Spacing.xl,
     lineHeight: 24,
+  },
+  dateButton: {
+    height: 48,
+    borderRadius: BorderRadius.sm,
+    borderWidth: 1,
+    paddingHorizontal: Spacing.md,
+    justifyContent: "center",
+    marginBottom: Spacing.md,
   },
   editors: {
     marginBottom: Spacing.xl,

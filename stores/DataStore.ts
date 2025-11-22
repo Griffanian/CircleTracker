@@ -18,6 +18,7 @@ export interface Event {
 export interface UserPreferences {
   showDaysSinceInner: boolean;
   hasCompletedOnboarding: boolean;
+  sobrietyStartDate: Date | null;
 }
 
 class DataStore {
@@ -26,6 +27,7 @@ class DataStore {
   private preferences: UserPreferences = {
     showDaysSinceInner: true,
     hasCompletedOnboarding: false,
+    sobrietyStartDate: null,
   };
   private listeners: Set<() => void> = new Set();
 

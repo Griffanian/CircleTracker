@@ -3,6 +3,7 @@ import { View, StyleSheet } from "react-native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { ScreenScrollView } from "@/components/ScreenScrollView";
 import { DaysSinceInnerWidget } from "@/components/DaysSinceInnerWidget";
+import { SobrietyDurationWidget } from "@/components/SobrietyDurationWidget";
 import { ConcentriCircles } from "@/components/ConcentriCircles";
 import { TodaySummary } from "@/components/TodaySummary";
 import { useDataStore, useTodayEventCounts, useLastInnerEvent } from "@/hooks/useDataStore";
@@ -37,6 +38,7 @@ export default function HomeScreen({ navigation }: HomeScreenProps) {
       <View style={styles.container}>
         <ConcentriCircles onCirclePress={handleLogPress} />
         <TodaySummary counts={todayCounts} />
+        <SobrietyDurationWidget sobrietyStartDate={preferences.sobrietyStartDate} />
         <DaysSinceInnerWidget
           lastInnerEvent={lastInnerEvent}
           show={preferences.showDaysSinceInner}
