@@ -4,7 +4,7 @@ import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { ThemedText } from "@/components/ThemedText";
 import { ScreenScrollView } from "@/components/ScreenScrollView";
 import { CircleBehaviorEditor } from "@/components/CircleBehaviorEditor";
-import { useDataStore } from "@/hooks/useDataStore";
+import { useDataStore, useBehaviors } from "@/hooks/useDataStore";
 import { CircleType } from "@/stores/DataStore";
 import { Spacing, BorderRadius } from "@/constants/theme";
 import { useTheme } from "@/hooks/useTheme";
@@ -26,6 +26,7 @@ export default function OnboardingCirclesScreen({
   };
 
   const handleDeleteBehavior = (id: string) => {
+    console.log("[OnboardingScreen] Deleting behavior:", id);
     store.deleteBehavior(id);
   };
 
@@ -34,9 +35,9 @@ export default function OnboardingCirclesScreen({
     navigation.goBack();
   };
 
-  const innerBehaviors = store.getBehaviors("inner");
-  const middleBehaviors = store.getBehaviors("middle");
-  const outerBehaviors = store.getBehaviors("outer");
+  const innerBehaviors = useBehaviors("inner");
+  const middleBehaviors = useBehaviors("middle");
+  const outerBehaviors = useBehaviors("outer");
   
   console.log("[OnboardingScreen] Render - behaviors count:", {
     inner: innerBehaviors.length,
