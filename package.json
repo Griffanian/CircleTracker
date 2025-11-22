@@ -12,9 +12,9 @@
     "check:format": "prettier --check \"**/*.{js,ts,tsx,css,json}\"",
     "format": "prettier --write \"**/*.{js,ts,tsx,css,json}\"",
     "install-deps": "npm ci || npm install",
-    "build:web": "npx expo export --output-dir web-build -p web",
+    "build:web": "npx expo export --output-dir docs -p web",
     "build": "npm run build:web",
-    "postbuild": "cp web-build/index.html web-build/404.html"
+    "postbuild": "cp docs/index.html docs/404.html"
   },
   "homepage": "https://Griffanian.github.io/CircleTracker",
   "dependencies": {
