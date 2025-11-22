@@ -1,8 +1,8 @@
 # Overview
 
-Circles is a React Native behavioral tracking application built with Expo. It helps users monitor and categorize behaviors across three concentric circles: Inner (harmful behaviors to avoid), Middle (risky behaviors to monitor), and Outer (positive behaviors to encourage). The app provides quick logging, statistics tracking, and a chronological history of events.
+Circles is a React Native behavioral tracking application built with Expo. It helps users monitor and categorize behaviors across three concentric circles: Inner (harmful behaviors to avoid), Middle (risky behaviors to monitor), and Outer (positive behaviors to encourage). The app provides quick logging, statistics tracking, sobriety duration tracking, and a chronological history of events.
 
-The application uses a mobile-first design with tab-based navigation and supports iOS, Android, and web platforms. It includes onboarding flows for first-time users and customizable behavior tracking per circle type.
+The application uses a mobile-first design with tab-based navigation and supports iOS, Android, and web platforms. It includes onboarding flows for first-time users, sobriety start date selection, and customizable behavior tracking per circle type.
 
 # User Preferences
 
@@ -53,7 +53,10 @@ Preferred communication style: Simple, everyday language.
 **Data Model**:
 - **Behaviors**: User-defined actions categorized by circle type with optional descriptions
 - **Events**: Timestamped logs linking to behaviors with optional notes
-- **Preferences**: User settings for UI customization and onboarding state
+- **Preferences**: User settings for UI customization, onboarding state, and sobriety start date
+  - `sobrietyStartDate: Date | null` - Tracks when user started their sobriety journey
+  - `hasCompletedOnboarding: boolean` - Flags first-time user flow completion
+  - `showDaysSinceInner: boolean` - Controls Days Since Inner widget visibility
 - **Storage**: Currently in-memory only (no persistence implemented yet)
 
 **Future Considerations**: AsyncStorage for local persistence, potential cloud sync if authentication is added
@@ -115,6 +118,7 @@ Preferred communication style: Simple, everyday language.
 - **React Native Reanimated 4**: High-performance animations
 - **React Native Gesture Handler**: Touch and gesture recognition
 - **Expo Blur**: Platform-native blur effects for iOS
+- **@react-native-community/datetimepicker**: Native date picker for iOS/Android (not supported on web)
 
 ## Platform Utilities
 - **React Native Safe Area Context**: Handles device-specific safe areas
