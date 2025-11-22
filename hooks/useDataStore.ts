@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { dataStore, CircleType, Behavior } from "@/stores/DataStore";
 
 export function useDataStore() {
@@ -74,12 +74,14 @@ export function useLastInnerEvent() {
 
 export function useEventCountsForPeriod(days: number): { inner: number; middle: number; outer: number } {
   const [counts, setCounts] = useState(() => dataStore.getEventCountsForPeriod(days));
+  const daysRef = useRef(days);
 
   useEffect(() => {
+    daysRef.current = days;
     setCounts(dataStore.getEventCountsForPeriod(days));
     
     const unsubscribe = dataStore.subscribe(() => {
-      setCounts(dataStore.getEventCountsForPeriod(days));
+      setCounts(dataStore.getEventCountsForPeriod(daysRef.current));
     });
     
     return () => {
