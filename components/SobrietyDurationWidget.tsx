@@ -12,11 +12,8 @@ export function SobrietyDurationWidget({
   sobrietyStartDate,
 }: SobrietyDurationWidgetProps) {
   const { theme } = useTheme();
-  
-  console.log("[SobrietyDurationWidget] Received sobrietyStartDate:", sobrietyStartDate);
 
   if (!sobrietyStartDate) {
-    console.log("[SobrietyDurationWidget] sobrietyStartDate is null, not rendering");
     return null;
   }
 

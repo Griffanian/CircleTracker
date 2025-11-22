@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { View, StyleSheet, Pressable, Platform, TextInput, Modal } from "react-native";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
@@ -27,6 +27,7 @@ export default function OnboardingCirclesScreen({
     preferences.sobrietyStartDate
   );
   const [showDatePicker, setShowDatePicker] = useState(false);
+  const dateInputRef = useRef<HTMLInputElement>(null);
 
   const handleAddBehavior = (circleType: CircleType, name: string) => {
     store.addBehavior({ circleType, name });
@@ -44,12 +45,24 @@ export default function OnboardingCirclesScreen({
   };
 
   const handleFinish = () => {
-    console.log("[OnboardingCircles] handleFinish called with sobrietyDate:", sobrietyDate);
+    let finalSobrietyDate = sobrietyDate;
+    
+    // Fallback: if on web and state is null, check the input value directly
+    if (Platform.OS === "web" && !finalSobrietyDate && dateInputRef.current) {
+      const inputValue = dateInputRef.current.value;
+      if (inputValue) {
+        const [year, month, day] = inputValue.split("-").map(Number);
+        const parsed = new Date(year, month - 1, day);
+        if (!isNaN(parsed.getTime())) {
+          finalSobrietyDate = parsed;
+        }
+      }
+    }
+    
     store.updatePreferences({ 
       hasCompletedOnboarding: true,
-      sobrietyStartDate: sobrietyDate,
+      sobrietyStartDate: finalSobrietyDate,
     });
-    console.log("[OnboardingCircles] Preferences updated, navigating back");
     navigation.goBack();
   };
 
@@ -117,43 +130,42 @@ export default function OnboardingCirclesScreen({
 
         {Platform.OS === "web" ? (
           <View>
-            <TextInput
-              style={[
-                styles.dateInput,
-                {
-                  backgroundColor: theme.backgroundDefault,
-                  borderColor: theme.border,
-                  color: theme.text,
-                },
-              ]}
-              placeholder="YYYY-MM-DD (e.g., 2024-01-15)"
-              placeholderTextColor={theme.textSecondary}
+            <input
+              ref={dateInputRef}
+              type="date"
+              max={new Date().toISOString().split("T")[0]}
               value={
                 sobrietyDate
                   ? sobrietyDate.toISOString().split("T")[0]
                   : ""
               }
-              onChangeText={(text) => {
-                console.log("[OnboardingCircles] Date input changed:", text);
-                if (text === "") {
-                  console.log("[OnboardingCircles] Clearing sobriety date");
+              onChange={(e) => {
+                const value = e.target.value;
+                if (value === "") {
                   setSobrietyDate(null);
                   return;
                 }
                 
-                if (text.length === 10 && /^\d{4}-\d{2}-\d{2}$/.test(text)) {
-                  const [year, month, day] = text.split("-").map(Number);
-                  const parsed = new Date(year, month - 1, day);
-                  
-                  if (!isNaN(parsed.getTime())) {
-                    console.log("[OnboardingCircles] Setting sobriety date:", parsed);
-                    setSobrietyDate(parsed);
-                  } else {
-                    console.log("[OnboardingCircles] Invalid date parsed");
-                  }
-                } else {
-                  console.log("[OnboardingCircles] Date format invalid or incomplete");
+                const [year, month, day] = value.split("-").map(Number);
+                const parsed = new Date(year, month - 1, day);
+                
+                if (!isNaN(parsed.getTime())) {
+                  setSobrietyDate(parsed);
                 }
+              }}
+              style={{
+                height: 48,
+                borderRadius: BorderRadius.sm,
+                borderWidth: 1,
+                borderStyle: "solid",
+                borderColor: theme.border,
+                backgroundColor: theme.backgroundDefault,
+                color: theme.text,
+                paddingLeft: Spacing.md,
+                paddingRight: Spacing.md,
+                fontSize: 16,
+                marginBottom: Spacing.sm,
+                width: "100%",
               }}
             />
             {sobrietyDate ? (

@@ -29,8 +29,6 @@ export default function HomeScreen({ navigation }: HomeScreenProps) {
   const handleLogPress = (circleType: CircleType) => {
     navigation.navigate("LogEvent", { circleType });
   };
-  
-  console.log("[HomeScreen] Rendering with sobrietyStartDate:", preferences.sobrietyStartDate);
 
   return (
     <ScreenScrollView>

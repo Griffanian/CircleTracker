@@ -99,9 +99,7 @@ export function usePreferences() {
     setPreferences(dataStore.getPreferences());
     
     const unsubscribe = dataStore.subscribe(() => {
-      const newPreferences = dataStore.getPreferences();
-      console.log("[usePreferences] Received update from DataStore:", newPreferences);
-      setPreferences(newPreferences);
+      setPreferences(dataStore.getPreferences());
     });
     
     return () => {
