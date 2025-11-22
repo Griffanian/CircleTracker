@@ -83,9 +83,34 @@ export default function OnboardingCirclesScreen({
 
         <View style={styles.divider} />
 
-        <ThemedText style={styles.title}>Sobriety Start Date</ThemedText>
+        <ThemedText style={styles.title}>Setup Your Circles</ThemedText>
         <ThemedText style={[styles.description, { color: theme.textSecondary }]}>
-          When did you start your sobriety journey? This is optional but helps you track your progress.
+          Add behaviors for each circle to personalize your tracking.
+        </ThemedText>
+
+        <View style={styles.editors}>
+          <CircleBehaviorEditor
+            circleType="inner"
+            behaviors={innerBehaviors}
+            onAdd={(name) => handleAddBehavior("inner", name)}
+            onDelete={handleDeleteBehavior}
+          />
+          <CircleBehaviorEditor
+            circleType="middle"
+            behaviors={middleBehaviors}
+            onAdd={(name) => handleAddBehavior("middle", name)}
+            onDelete={handleDeleteBehavior}
+          />
+          <CircleBehaviorEditor
+            circleType="outer"
+            behaviors={outerBehaviors}
+            onAdd={(name) => handleAddBehavior("outer", name)}
+            onDelete={handleDeleteBehavior}
+          />
+        </View>
+        <ThemedText style={styles.title}>Start Date</ThemedText>
+        <ThemedText style={[styles.description, { color: theme.textSecondary }]}>
+          When did you start your journey? This is optional but helps you track how far you've already come.
         </ThemedText>
 
         <Pressable
@@ -121,32 +146,6 @@ export default function OnboardingCirclesScreen({
         )}
 
         <View style={styles.divider} />
-
-        <ThemedText style={styles.title}>Setup Your Circles</ThemedText>
-        <ThemedText style={[styles.description, { color: theme.textSecondary }]}>
-          Add behaviors for each circle to personalize your tracking.
-        </ThemedText>
-
-        <View style={styles.editors}>
-          <CircleBehaviorEditor
-            circleType="inner"
-            behaviors={innerBehaviors}
-            onAdd={(name) => handleAddBehavior("inner", name)}
-            onDelete={handleDeleteBehavior}
-          />
-          <CircleBehaviorEditor
-            circleType="middle"
-            behaviors={middleBehaviors}
-            onAdd={(name) => handleAddBehavior("middle", name)}
-            onDelete={handleDeleteBehavior}
-          />
-          <CircleBehaviorEditor
-            circleType="outer"
-            behaviors={outerBehaviors}
-            onAdd={(name) => handleAddBehavior("outer", name)}
-            onDelete={handleDeleteBehavior}
-          />
-        </View>
 
         <Pressable
           onPress={handleFinish}
