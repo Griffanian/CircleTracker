@@ -1,5 +1,5 @@
 import React from "react";
-import { View, StyleSheet } from "react-native";
+import { View, StyleSheet, Pressable } from "react-native";
 import { ThemedText } from "@/components/ThemedText";
 import { CircleBadge } from "@/components/CircleBadge";
 import { CircleType } from "@/stores/DataStore";
@@ -10,12 +10,16 @@ interface CircleSummaryStatsProps {
   circleType: CircleType;
   count7Days: number;
   count30Days: number;
+  onPress7Days?: () => void;
+  onPress30Days?: () => void;
 }
 
 export function CircleSummaryStats({
   circleType,
   count7Days,
   count30Days,
+  onPress7Days,
+  onPress30Days,
 }: CircleSummaryStatsProps) {
   const { theme } = useTheme();
 
@@ -36,19 +40,33 @@ export function CircleSummaryStats({
         <ThemedText style={styles.title}>{getCircleLabel()} Circle</ThemedText>
       </View>
       <View style={styles.stats}>
-        <View style={styles.stat}>
+        <Pressable
+          onPress={onPress7Days}
+          style={({ pressed }) => [
+            styles.stat,
+            { opacity: pressed && onPress7Days ? 0.7 : 1 },
+          ]}
+          disabled={!onPress7Days}
+        >
           <ThemedText style={styles.count}>{count7Days}</ThemedText>
           <ThemedText style={[styles.label, { color: theme.textSecondary }]}>
             Last 7 days
           </ThemedText>
-        </View>
+        </Pressable>
         <View style={[styles.divider, { backgroundColor: theme.border }]} />
-        <View style={styles.stat}>
+        <Pressable
+          onPress={onPress30Days}
+          style={({ pressed }) => [
+            styles.stat,
+            { opacity: pressed && onPress30Days ? 0.7 : 1 },
+          ]}
+          disabled={!onPress30Days}
+        >
           <ThemedText style={styles.count}>{count30Days}</ThemedText>
           <ThemedText style={[styles.label, { color: theme.textSecondary }]}>
             Last 30 days
           </ThemedText>
-        </View>
+        </Pressable>
       </View>
     </View>
   );

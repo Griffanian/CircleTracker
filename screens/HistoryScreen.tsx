@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { View, StyleSheet, Pressable, SectionList } from "react-native";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
@@ -9,21 +9,49 @@ import { Spacing, BorderRadius } from "@/constants/theme";
 import { useTheme } from "@/hooks/useTheme";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
+import { useRoute, RouteProp } from "@react-navigation/native";
+import { MainTabParamList } from "@/navigation/MainTabNavigator";
 
 type FilterType = "all" | CircleType;
+type DaysFilterType = 7 | 30 | "all";
 
 export default function HistoryScreen() {
   const { theme } = useTheme();
   const store = useDataStore();
-  const [filter, setFilter] = useState<FilterType>("all");
+  const route = useRoute<RouteProp<MainTabParamList, "HistoryTab">>();
+  const [filter, setFilter] = useState<FilterType>(route.params?.circleFilter || "all");
+  const [daysFilter, setDaysFilter] = useState<DaysFilterType>(route.params?.daysFilter || "all");
   const insets = useSafeAreaInsets();
   const tabBarHeight = useBottomTabBarHeight();
 
+  useEffect(() => {
+    if (route.params?.circleFilter) {
+      setFilter(route.params.circleFilter);
+    }
+    if (route.params?.daysFilter) {
+      setDaysFilter(route.params.daysFilter);
+    }
+  }, [route.params]);
+
   const events = store.getEvents();
-  const filteredEvents =
-    filter === "all"
-      ? events
-      : events.filter((e) => e.circleType === filter);
+  
+  const applyFilters = (events: Event[]) => {
+    let result = events;
+    
+    if (filter !== "all") {
+      result = result.filter((e) => e.circleType === filter);
+    }
+    
+    if (daysFilter !== "all") {
+      const now = new Date();
+      const cutoffDate = new Date(now.getTime() - daysFilter * 24 * 60 * 60 * 1000);
+      result = result.filter((e) => new Date(e.timestamp) >= cutoffDate);
+    }
+    
+    return result;
+  };
+  
+  const filteredEvents = applyFilters(events);
 
   const groupEventsByDate = (events: Event[]) => {
     const groups: { [key: string]: Event[] } = {};
@@ -50,6 +78,12 @@ export default function HistoryScreen() {
     { type: "outer", label: "Outer" },
   ];
 
+  const daysFilters: { type: DaysFilterType; label: string }[] = [
+    { type: "all", label: "All Time" },
+    { type: 7, label: "Last 7 Days" },
+    { type: 30, label: "Last 30 Days" },
+  ];
+
   return (
     <ThemedView style={styles.container}>
       <View style={styles.filterContainer}>
@@ -73,6 +107,36 @@ export default function HistoryScreen() {
                 styles.filterText,
                 {
                   color: filter === f.type ? "#FFFFFF" : theme.text,
+                },
+              ]}
+            >
+              {f.label}
+            </ThemedText>
+          </Pressable>
+        ))}
+      </View>
+
+      <View style={styles.filterContainer}>
+        {daysFilters.map((f) => (
+          <Pressable
+            key={f.type}
+            onPress={() => setDaysFilter(f.type)}
+            style={({ pressed }) => [
+              styles.filterButton,
+              {
+                backgroundColor:
+                  daysFilter === f.type
+                    ? theme.primary
+                    : theme.backgroundSecondary,
+                opacity: pressed ? 0.7 : 1,
+              },
+            ]}
+          >
+            <ThemedText
+              style={[
+                styles.filterText,
+                {
+                  color: daysFilter === f.type ? "#FFFFFF" : theme.text,
                 },
               ]}
             >

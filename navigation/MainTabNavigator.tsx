@@ -12,7 +12,10 @@ import SettingsScreen from "@/screens/SettingsScreen";
 export type MainTabParamList = {
   HomeTab: undefined;
   TrackerTab: undefined;
-  HistoryTab: undefined;
+  HistoryTab: {
+    circleFilter?: "all" | "inner" | "middle" | "outer";
+    daysFilter?: 7 | 30 | "all";
+  } | undefined;
   SettingsTab: undefined;
 };
 

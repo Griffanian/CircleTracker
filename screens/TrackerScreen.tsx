@@ -6,9 +6,15 @@ import { ThemedText } from "@/components/ThemedText";
 import { useEventCountsForPeriod } from "@/hooks/useDataStore";
 import { Spacing } from "@/constants/theme";
 import { useTheme } from "@/hooks/useTheme";
+import { useNavigation } from "@react-navigation/native";
+import type { BottomTabNavigationProp } from "@react-navigation/bottom-tabs";
+import type { MainTabParamList } from "@/navigation/MainTabNavigator";
+
+type TrackerScreenNavigationProp = BottomTabNavigationProp<MainTabParamList, "TrackerTab">;
 
 export default function TrackerScreen() {
   const { theme } = useTheme();
+  const navigation = useNavigation<TrackerScreenNavigationProp>();
   const counts7Days = useEventCountsForPeriod(7);
   const counts30Days = useEventCountsForPeriod(30);
 
@@ -25,16 +31,22 @@ export default function TrackerScreen() {
             circleType="inner"
             count7Days={counts7Days.inner}
             count30Days={counts30Days.inner}
+            onPress7Days={() => navigation.navigate("HistoryTab", { circleFilter: "inner", daysFilter: 7 })}
+            onPress30Days={() => navigation.navigate("HistoryTab", { circleFilter: "inner", daysFilter: 30 })}
           />
           <CircleSummaryStats
             circleType="middle"
             count7Days={counts7Days.middle}
             count30Days={counts30Days.middle}
+            onPress7Days={() => navigation.navigate("HistoryTab", { circleFilter: "middle", daysFilter: 7 })}
+            onPress30Days={() => navigation.navigate("HistoryTab", { circleFilter: "middle", daysFilter: 30 })}
           />
           <CircleSummaryStats
             circleType="outer"
             count7Days={counts7Days.outer}
             count30Days={counts30Days.outer}
+            onPress7Days={() => navigation.navigate("HistoryTab", { circleFilter: "outer", daysFilter: 7 })}
+            onPress30Days={() => navigation.navigate("HistoryTab", { circleFilter: "outer", daysFilter: 30 })}
           />
         </View>
       </View>
