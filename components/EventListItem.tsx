@@ -26,7 +26,7 @@ export function EventListItem({ event, behavior, onDelete }: EventListItemProps)
       if (window.confirm("Are you sure you want to delete this event?")) {
         onDelete(event.id);
       }
-    } else{
+    } else {
       Alert.alert(
         "Delete Event",
         "Are you sure you want to delete this event?",

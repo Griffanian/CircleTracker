@@ -25,8 +25,7 @@
     },
     "web": {
       "output": "single",
-      "favicon": "./assets/images/favicon.png",
-      "bundler": "metro"
+      "favicon": "./assets/images/favicon.png"
     },
     "plugins": [
       [
@@ -44,7 +43,7 @@
       "expo-web-browser"
     ],
     "experiments": {
-    "reactCompiler": true,
-    "baseUrl": "/CircleTracker"
-  }}
+      "reactCompiler": true
+    }
+  }
 }
