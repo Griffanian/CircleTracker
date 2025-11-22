@@ -47,14 +47,19 @@ export default function OnboardingCirclesScreen({
     <ScreenScrollView>
       <View style={styles.container}>
         <ThemedText style={styles.welcomeTitle}>
-          Welcome! Congratulations on taking this next step towards controlling
+          Welcome! {"\n"}
+          Congratulations on taking this next step towards controlling
           your behaviour.
         </ThemedText>
 
         <ThemedText style={[styles.subtitle, { color: theme.textSecondary }]}>
-          This app is based on the three circles from 12-Step programs, as many
-          of us have found, this is a very useful tool for noticing patterns and
+          This app is based on The Three Circles from 12-Step programs. Many
+          of us who have walked the steps have found this to be a very useful tool for noticing patterns and
           controlling our behaviours.
+        </ThemedText>
+
+        <ThemedText style={styles.CirclesTitle}>
+          The Three Circles
         </ThemedText>
 
         <CirclesExplanation />
@@ -121,6 +126,14 @@ const styles = StyleSheet.create({
     fontSize: 15,
     lineHeight: 22,
     marginBottom: Spacing.xl,
+  },
+  CirclesTitle: {
+    fontSize: 22,
+    fontWeight: "600",
+    lineHeight: 32,
+    marginBottom: Spacing.md,
+    textAlign: "center",
+
   },
   divider: {
     height: 1,

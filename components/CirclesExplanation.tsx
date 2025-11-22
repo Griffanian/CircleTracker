@@ -26,9 +26,8 @@ export function CirclesExplanation() {
             <ThemedText style={styles.circleLabel}>Inner Circle</ThemedText>
           </View>
           <ThemedText style={[styles.explanation, { color: theme.textSecondary }]}>
-            Behaviours define your sobriety, they are things that you would not want
-            to do. If you do them, most people consider that a slip and they reset
-            their sobriety from there. They are things that you wish to never do.
+            Actions that clearly cross your personal boundaries or violate commitments you’ve made to yourself. 
+            These are the behaviours you’re trying to reduce or eliminate because they lead to negative outcomes or move you away from who you want to be.
           </ThemedText>
         </View>
 
@@ -38,9 +37,8 @@ export function CirclesExplanation() {
             <ThemedText style={styles.circleLabel}>Middle Circle</ThemedText>
           </View>
           <ThemedText style={[styles.explanation, { color: theme.textSecondary }]}>
-            Behaviours are things that are not fully breaking your sobriety but
-            they're still kind of dodgy and you would rather not do them because
-            they're a slippery slope.
+            Actions, situations, or patterns that increase vulnerability or move you closer to behaviours you want to avoid.
+            They aren’t inherently “bad,” but they act as early warning signs or indicators that you may not be aligned with your intentions.
           </ThemedText>
         </View>
 
@@ -50,8 +48,8 @@ export function CirclesExplanation() {
             <ThemedText style={styles.circleLabel}>Outer Circle</ThemedText>
           </View>
           <ThemedText style={[styles.explanation, { color: theme.textSecondary }]}>
-            Behaviours bring joy and happiness into your life. Examples include:
-            going to the gym, talking to a friend, etc.
+            Actions that support your wellbeing, values, and long-term goals.
+            These behaviours move you in the direction you want to grow. They strengthen resilience, create connection, and improve your overall quality of life.
           </ThemedText>
         </View>
       </View>
