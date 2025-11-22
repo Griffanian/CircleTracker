@@ -18,14 +18,14 @@ export function useDataStore() {
 
 export function useBehaviors(circleType?: CircleType): Behavior[] {
   const [behaviors, setBehaviors] = useState<Behavior[]>(() => 
-    dataStore.getBehaviors(circleType)
+    [...dataStore.getBehaviors(circleType)] 
   );
 
   useEffect(() => {
-    setBehaviors(dataStore.getBehaviors(circleType));
+    setBehaviors([...dataStore.getBehaviors(circleType)]);
     
     const unsubscribe = dataStore.subscribe(() => {
-      setBehaviors(dataStore.getBehaviors(circleType));
+      setBehaviors([...dataStore.getBehaviors(circleType)]);
     });
     
     return () => {
