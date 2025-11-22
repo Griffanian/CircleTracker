@@ -1,7 +1,8 @@
 import React from "react";
-import { View, StyleSheet } from "react-native";
+import { View, StyleSheet, Pressable } from "react-native";
 import { ThemedText } from "@/components/ThemedText";
 import { CircleBadge } from "@/components/CircleBadge";
+import { CircleType } from "@/stores/DataStore";
 import { Spacing, BorderRadius, Shadows } from "@/constants/theme";
 import { useTheme } from "@/hooks/useTheme";
 
@@ -11,9 +12,10 @@ interface TodaySummaryProps {
     middle: number;
     outer: number;
   };
+  onCirclePress?: (circleType: CircleType) => void;
 }
 
-export function TodaySummary({ counts }: TodaySummaryProps) {
+export function TodaySummary({ counts, onCirclePress }: TodaySummaryProps) {
   const { theme } = useTheme();
 
   return (
@@ -28,18 +30,36 @@ export function TodaySummary({ counts }: TodaySummaryProps) {
         Today's Activity
       </ThemedText>
       <View style={styles.stats}>
-        <View style={styles.stat}>
+        <Pressable
+          style={({ pressed }) => [
+            styles.stat,
+            { opacity: pressed ? 0.7 : 1 },
+          ]}
+          onPress={() => onCirclePress?.("inner")}
+        >
           <CircleBadge circleType="inner" size={20} />
           <ThemedText style={styles.count}>{counts.inner}</ThemedText>
-        </View>
-        <View style={styles.stat}>
+        </Pressable>
+        <Pressable
+          style={({ pressed }) => [
+            styles.stat,
+            { opacity: pressed ? 0.7 : 1 },
+          ]}
+          onPress={() => onCirclePress?.("middle")}
+        >
           <CircleBadge circleType="middle" size={20} />
           <ThemedText style={styles.count}>{counts.middle}</ThemedText>
-        </View>
-        <View style={styles.stat}>
+        </Pressable>
+        <Pressable
+          style={({ pressed }) => [
+            styles.stat,
+            { opacity: pressed ? 0.7 : 1 },
+          ]}
+          onPress={() => onCirclePress?.("outer")}
+        >
           <CircleBadge circleType="outer" size={20} />
           <ThemedText style={styles.count}>{counts.outer}</ThemedText>
-        </View>
+        </Pressable>
       </View>
     </View>
   );

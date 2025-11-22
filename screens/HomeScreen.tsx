@@ -28,11 +28,18 @@ export default function HomeScreen({ navigation }: HomeScreenProps) {
     navigation.navigate("LogEvent", { circleType });
   };
 
+  const handleTodaySummaryPress = (circleType: CircleType) => {
+    const parent = navigation.getParent();
+    if (parent) {
+      parent.navigate("HistoryTab", { circleFilter: circleType });
+    }
+  };
+
   return (
     <ScreenScrollView>
       <View style={styles.container}>
         <ConcentriCircles onCirclePress={handleLogPress} />
-        <TodaySummary counts={todayCounts} />
+        <TodaySummary counts={todayCounts} onCirclePress={handleTodaySummaryPress} />
         <DaysSinceInnerWidget
           sobrietyStartDate={preferences.sobrietyStartDate}
           show={preferences.showDaysSinceInner}

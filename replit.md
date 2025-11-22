@@ -2,7 +2,7 @@
 
 Circles is a React Native behavioral tracking application built with Expo. It helps users monitor and categorize behaviors across three concentric circles: Inner (harmful behaviors to avoid), Middle (risky behaviors to monitor), and Outer (positive behaviors to encourage). The app provides quick logging, statistics tracking, a "Days Since Inner Circle" counter that tracks sobriety duration, and a chronological history of events.
 
-The application uses a mobile-first design with tab-based navigation and supports iOS, Android, and web platforms. It includes onboarding flows for first-time users, sobriety start date selection (with calendar picker on web, native date picker on mobile), and customizable behavior tracking per circle type.
+The application uses a mobile-first design with tab-based navigation and supports iOS, Android, and web platforms. It includes onboarding flows for first-time users, sobriety start date selection (with calendar picker on web, native date picker on mobile), customizable behavior tracking per circle type, and clickable activity summaries that navigate to filtered history views.
 
 # User Preferences
 
