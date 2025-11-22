@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { View, StyleSheet, Pressable, Platform } from "react-native";
-import { reloadAppAsync } from "expo";
+import { View, StyleSheet, Pressable } from "react-native";
 import { ThemedText } from "@/components/ThemedText";
 import { EventListItem } from "@/components/EventListItem";
 import { ScreenSectionList } from "@/components/ScreenSectionList";
-import { useDataStore } from "@/hooks/useDataStore";
+import { useDataStore, useEvents } from "@/hooks/useDataStore";
 import { Event, CircleType } from "@/stores/DataStore";
 import { Spacing, BorderRadius } from "@/constants/theme";
 import { useTheme } from "@/hooks/useTheme";
@@ -37,16 +36,9 @@ export default function HistoryScreen() {
 
   const handleDeleteEvent = async (eventId: string) => {
     await store.deleteEvent(eventId);
-    
-    // Reload the app after deletion
-    if (Platform.OS === "web") {
-      window.location.reload();
-    } else {
-      await reloadAppAsync();
-    }
   };
 
-  const events = store.getEvents();
+  const events = useEvents();
   
   const applyFilters = (events: Event[]) => {
     let result = events;

@@ -65,6 +65,21 @@ Preferred communication style: Simple, everyday language.
   - `sobrietyStartDate: Date | null` - Tracks when user started their sobriety journey
   - `hasCompletedOnboarding: boolean` - Flags first-time user flow completion
   - `showDaysSinceInner: boolean` - Controls Days Since Inner widget visibility
+
+**All Reactive Hooks (using useSyncExternalStore)**:
+- `useDataStore()` - Main store access with version tracking
+- `useBehaviors(circleType?)` - Behavior lists, optionally filtered by circle type
+- `useEvents()` - All events sorted by timestamp (used by History screen)
+- `useTodayEventCounts()` - Today's activity counts (used by Home screen)
+- `useEventCountsForPeriod(days)` - Period statistics (used by Tracker screen)
+- `useLastInnerEvent()` - Most recent inner circle event for sobriety counter
+- `usePreferences()` - User preferences and settings
+
+**Reactive Updates**:
+- All hooks use React's `useSyncExternalStore` for reliable re-renders
+- When data changes (add/delete events, behaviors, preferences), DataStore increments version counter
+- All subscribed components automatically re-render with fresh data
+- No manual reloads needed anywhere - screens sync automatically across tab switches
   
 **Event Management**:
 - **Deletion**: Users can delete individual events from the history screen
