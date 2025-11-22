@@ -1,0 +1,5 @@
+[deployment]
+build = ["sh", "-c", "npx expo export:web"]
+run = ["sh", "-c", "echo 'Static deployment - files served from dist/'"]
+deploymentTarget = "static"
+publicDir = "dist"
