@@ -101,6 +101,45 @@ export default function SettingsScreen() {
             </ThemedText>
           </View>
         </View>
+        <View style={styles.section}>
+          <ThemedText style={styles.sectionTitle}>The Seventh Tradition</ThemedText>
+          <View
+            style={[
+              styles.infoCard,
+              {
+                backgroundColor: theme.backgroundDefault,
+                borderColor: theme.border,
+              },
+            ]}
+          >
+            <ThemedText
+              style={[styles.description, { color: theme.textSecondary }]}
+            >
+              In the spirit of self-support, Circles is offered as a free app
+              without ads or subscriptions. If you find value in using Circles,
+              please consider making a donation to support ongoing development
+              and maintenance. Your contributions help keep the app free for everyone.
+            </ThemedText>
+            <Pressable
+              onPress={() =>
+              require("react-native").Linking.openURL(
+                "https://buymeacoffee.com/MilesSoftware"
+              )
+              }
+              style={({ pressed }) => ({ marginTop: Spacing.md, opacity: pressed ? 0.7 : 1 })}
+              accessibilityRole="link"
+            >
+              <ThemedText
+              style={[
+                styles.description,
+                { color: theme.success, textDecorationLine: "underline" },
+              ]}
+              >
+                Donate via Buy Me a Coffee
+              </ThemedText>
+            </Pressable>
+          </View>
+        </View>
       </View>
     </ScreenScrollView>
   );
