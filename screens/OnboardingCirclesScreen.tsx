@@ -125,7 +125,7 @@ export default function OnboardingCirclesScreen({
         </View>
         <ThemedText style={styles.title}>Start Date</ThemedText>
         <ThemedText style={[styles.description, { color: theme.textSecondary }]}>
-          When did you start your journey? This is optional but helps you track how far you've already come.
+          How long has it been since you last engaged in your inner circle behaviors? (optional)
         </ThemedText>
 
         {Platform.OS === "web" ? (
