@@ -1,14 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { View, StyleSheet, Pressable, SectionList } from "react-native";
+import { View, StyleSheet, Pressable } from "react-native";
 import { ThemedText } from "@/components/ThemedText";
-import { ThemedView } from "@/components/ThemedView";
 import { EventListItem } from "@/components/EventListItem";
+import { ScreenSectionList } from "@/components/ScreenSectionList";
 import { useDataStore } from "@/hooks/useDataStore";
 import { Event, CircleType } from "@/stores/DataStore";
 import { Spacing, BorderRadius } from "@/constants/theme";
 import { useTheme } from "@/hooks/useTheme";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
 import { useRoute, RouteProp } from "@react-navigation/native";
 import { MainTabParamList } from "@/navigation/MainTabNavigator";
 
@@ -21,8 +19,6 @@ export default function HistoryScreen() {
   const route = useRoute<RouteProp<MainTabParamList, "HistoryTab">>();
   const [filter, setFilter] = useState<FilterType>(route.params?.circleFilter || "all");
   const [daysFilter, setDaysFilter] = useState<DaysFilterType>(route.params?.daysFilter || "all");
-  const insets = useSafeAreaInsets();
-  const tabBarHeight = useBottomTabBarHeight();
 
   useEffect(() => {
     if (route.params?.circleFilter) {
@@ -84,8 +80,8 @@ export default function HistoryScreen() {
     { type: 30, label: "Last 30 Days" },
   ];
 
-  return (
-    <ThemedView style={styles.container}>
+  const renderHeader = () => (
+    <>
       <View style={styles.filterContainer}>
         {filters.map((f) => (
           <Pressable
@@ -145,55 +141,51 @@ export default function HistoryScreen() {
           </Pressable>
         ))}
       </View>
+    </>
+  );
 
-      <SectionList
-        sections={sections}
-        keyExtractor={(item) => item.id}
-        renderItem={({ item }) => {
-          const behavior = store
-            .getBehaviors()
-            .find((b) => b.id === item.behaviorId);
-          return (
-            <View style={{ marginBottom: Spacing.sm }}>
-              <EventListItem event={item} behavior={behavior} />
-            </View>
-          );
-        }}
-        renderSectionHeader={({ section: { title } }) => (
-          <ThemedText style={[styles.dateHeader, { color: theme.textSecondary }]}>
-            {title}
-          </ThemedText>
-        )}
-        contentContainerStyle={[
-          styles.list,
-          { paddingBottom: tabBarHeight + Spacing.xl },
-        ]}
-        ListEmptyComponent={
-          <View style={styles.emptyState}>
-            <ThemedText
-              style={[styles.emptyText, { color: theme.textSecondary }]}
-            >
-              No events logged yet
-            </ThemedText>
-            <ThemedText
-              style={[styles.emptyHint, { color: theme.textSecondary }]}
-            >
-              Start logging your behaviors from the Home screen
-            </ThemedText>
+  return (
+    <ScreenSectionList
+      sections={sections}
+      keyExtractor={(item: Event) => item.id}
+      renderItem={({ item }: { item: Event }) => {
+        const behavior = store
+          .getBehaviors()
+          .find((b) => b.id === item.behaviorId);
+        return (
+          <View style={{ marginBottom: Spacing.sm }}>
+            <EventListItem event={item} behavior={behavior} />
           </View>
-        }
-      />
-    </ThemedView>
+        );
+      }}
+      renderSectionHeader={({ section }) => (
+        <ThemedText style={[styles.dateHeader, { color: theme.textSecondary }]}>
+          {section.title}
+        </ThemedText>
+      )}
+      ListHeaderComponent={renderHeader}
+      ListEmptyComponent={
+        <View style={styles.emptyState}>
+          <ThemedText
+            style={[styles.emptyText, { color: theme.textSecondary }]}
+          >
+            No events logged yet
+          </ThemedText>
+          <ThemedText
+            style={[styles.emptyHint, { color: theme.textSecondary }]}
+          >
+            Start logging your behaviors from the Home screen
+          </ThemedText>
+        </View>
+      }
+    />
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
   filterContainer: {
     flexDirection: "row",
-    padding: Spacing.lg,
+    paddingVertical: Spacing.md,
     gap: Spacing.sm,
   },
   filterButton: {
@@ -204,10 +196,6 @@ const styles = StyleSheet.create({
   filterText: {
     fontSize: 14,
     fontWeight: "600",
-  },
-  list: {
-    paddingHorizontal: Spacing.lg,
-    paddingTop: Spacing.sm,
   },
   dateHeader: {
     fontSize: 14,
