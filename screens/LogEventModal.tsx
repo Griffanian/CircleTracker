@@ -31,6 +31,11 @@ export default function LogEventModal({ route, navigation }: LogEventModalProps)
 
   const behaviors = store.getBehaviors(circleType);
 
+  const handleCreateCustomBehavior = (name: string) => {
+    const newBehavior = store.addBehavior({ circleType, name });
+    setSelectedBehaviorId(newBehavior.id);
+  };
+
   const handleSave = () => {
     if (selectedBehaviorId) {
       store.addEvent({
@@ -61,6 +66,7 @@ export default function LogEventModal({ route, navigation }: LogEventModalProps)
             behaviors={behaviors}
             selectedBehaviorId={selectedBehaviorId}
             onSelect={setSelectedBehaviorId}
+            onCreateCustom={handleCreateCustomBehavior}
           />
         </View>
 
