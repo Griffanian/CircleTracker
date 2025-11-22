@@ -3,6 +3,7 @@ import { View, TextInput, StyleSheet, Pressable } from "react-native";
 import { Feather } from "@expo/vector-icons";
 import { ThemedText } from "@/components/ThemedText";
 import { BehaviorListItem } from "@/components/BehaviorListItem";
+import { SuggestedBehaviors } from "@/components/SuggestedBehaviors";
 import { CircleType, Behavior } from "@/stores/DataStore";
 import { Spacing, BorderRadius, Typography } from "@/constants/theme";
 import { useTheme } from "@/hooks/useTheme";
@@ -27,6 +28,15 @@ export function CircleBehaviorEditor({
     if (behaviorName.trim()) {
       onAdd(behaviorName.trim());
       setBehaviorName("");
+    }
+  };
+
+  const handleSuggestionSelect = (suggestion: string) => {
+    const alreadyExists = behaviors.some(
+      (b) => b.name.toLowerCase() === suggestion.toLowerCase()
+    );
+    if (!alreadyExists) {
+      onAdd(suggestion);
     }
   };
 
@@ -55,6 +65,11 @@ export function CircleBehaviorEditor({
           {behaviors.length} {behaviors.length === 1 ? "behavior" : "behaviors"}
         </ThemedText>
       </View>
+
+      <SuggestedBehaviors
+        circleType={circleType}
+        onSelect={handleSuggestionSelect}
+      />
 
       <View style={styles.inputContainer}>
         <TextInput
