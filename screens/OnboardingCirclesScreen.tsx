@@ -47,8 +47,8 @@ export default function OnboardingCirclesScreen({
     <ScreenScrollView>
       <View style={styles.container}>
         <ThemedText style={styles.welcomeTitle}>
-          Welcome, so proud of you for taking this first step onto the road to
-          recovery!
+          Welcome! Congratulations on taking this next step towards controlling
+          your behaviour.
         </ThemedText>
 
         <CirclesExplanation />
