@@ -17,7 +17,11 @@ export function ConcentriCircles({ onCirclePress }: ConcentriCirclesProps) {
   const innerSize = 120;
 
   return (
+    
     <View style={[styles.container, { backgroundColor: theme.backgroundDefault }]}>
+      <ThemedText style={[styles.instruction, { color: theme.textSecondary }]}>
+        Tap a circle to log an event
+      </ThemedText>
       <View style={styles.circlesContainer}>
         <Pressable
           onPress={() => onCirclePress("outer")}
@@ -32,6 +36,7 @@ export function ConcentriCircles({ onCirclePress }: ConcentriCirclesProps) {
             },
           ]}
         >
+
           <View style={styles.outerLabel}>
             <ThemedText style={[styles.labelText, { color: "#FFFFFF" }]}>
               Outer
@@ -77,10 +82,6 @@ export function ConcentriCircles({ onCirclePress }: ConcentriCirclesProps) {
           </Pressable>
         </Pressable>
       </View>
-
-      <ThemedText style={[styles.instruction, { color: theme.textSecondary }]}>
-        Tap a circle to log an event
-      </ThemedText>
     </View>
   );
 }

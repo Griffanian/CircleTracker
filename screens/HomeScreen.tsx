@@ -41,9 +41,7 @@ export default function HomeScreen({ navigation }: HomeScreenProps) {
   return (
     <ScreenScrollView>
       <View style={styles.container}>
-        <ThemedText style={[styles.instruction, { color: theme.textSecondary }]}>
-          Tap a circle to log a behavior
-        </ThemedText>
+
         <ConcentriCircles onCirclePress={handleLogPress} />
         <TodaySummary counts={todayCounts} onCirclePress={handleTodaySummaryPress} />
         <DaysSinceInnerWidget
