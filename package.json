@@ -14,8 +14,7 @@
     "install-deps": "npm ci || npm install",
     "build:web": "npx expo export --output-dir web-build -p web",
     "build": "npm run build:web",
-    "predeploy": "npm run build",
-    "deploy": "gh-pages -d web-build"
+    "postbuild": "cp web-build/index.html web-build/404.html"
   },
   "homepage": "https://Griffanian.github.io/CircleTracker",
   "dependencies": {
