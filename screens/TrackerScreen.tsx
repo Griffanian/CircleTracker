@@ -3,16 +3,14 @@ import { View, StyleSheet } from "react-native";
 import { ScreenScrollView } from "@/components/ScreenScrollView";
 import { CircleSummaryStats } from "@/components/CircleSummaryStats";
 import { ThemedText } from "@/components/ThemedText";
-import { useDataStore } from "@/hooks/useDataStore";
+import { useEventCountsForPeriod } from "@/hooks/useDataStore";
 import { Spacing } from "@/constants/theme";
 import { useTheme } from "@/hooks/useTheme";
 
 export default function TrackerScreen() {
   const { theme } = useTheme();
-  const store = useDataStore();
-
-  const counts7Days = store.getEventCountsForPeriod(7);
-  const counts30Days = store.getEventCountsForPeriod(30);
+  const counts7Days = useEventCountsForPeriod(7);
+  const counts30Days = useEventCountsForPeriod(30);
 
   return (
     <ScreenScrollView>
