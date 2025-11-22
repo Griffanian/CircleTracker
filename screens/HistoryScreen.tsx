@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { View, StyleSheet, Pressable } from "react-native";
+import { View, StyleSheet, Pressable, Platform } from "react-native";
+import { reloadAppAsync } from "expo";
 import { ThemedText } from "@/components/ThemedText";
 import { EventListItem } from "@/components/EventListItem";
 import { ScreenSectionList } from "@/components/ScreenSectionList";
@@ -36,6 +37,13 @@ export default function HistoryScreen() {
 
   const handleDeleteEvent = async (eventId: string) => {
     await store.deleteEvent(eventId);
+    
+    // Reload the app after deletion
+    if (Platform.OS === "web") {
+      window.location.reload();
+    } else {
+      await reloadAppAsync();
+    }
   };
 
   const events = store.getEvents();
