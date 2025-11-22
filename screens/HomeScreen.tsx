@@ -1,52 +1,54 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { View, StyleSheet } from "react-native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { Card } from "@/components/Card";
-import { ScreenFlatList } from "@/components/ScreenFlatList";
-import Spacer from "@/components/Spacer";
+import { ScreenScrollView } from "@/components/ScreenScrollView";
+import { DaysSinceInnerWidget } from "@/components/DaysSinceInnerWidget";
+import { QuickCircleLogButtons } from "@/components/QuickCircleLogButtons";
+import { TodaySummary } from "@/components/TodaySummary";
+import { useDataStore } from "@/hooks/useDataStore";
+import { CircleType } from "@/stores/DataStore";
 import { Spacing } from "@/constants/theme";
-
-type HomeStackParamList = {
-  Home: undefined;
-  Detail: undefined;
-};
+import { HomeStackParamList } from "@/navigation/HomeStackNavigator";
 
 type HomeScreenProps = {
   navigation: NativeStackNavigationProp<HomeStackParamList, "Home">;
 };
 
-interface CardData {
-  id: string;
-  elevation: number;
-}
-
-const CARD_DATA: CardData[] = [
-  { id: "1", elevation: 1 },
-  { id: "2", elevation: 2 },
-  { id: "3", elevation: 3 },
-  { id: "4", elevation: 1 },
-  { id: "5", elevation: 2 },
-  { id: "6", elevation: 3 },
-  { id: "7", elevation: 1 },
-  { id: "8", elevation: 2 },
-  { id: "9", elevation: 3 },
-];
-
 export default function HomeScreen({ navigation }: HomeScreenProps) {
-  const renderItem = ({ item }: { item: CardData }) => (
-    <>
-      <Card
-        elevation={item.elevation}
-        onPress={() => navigation.navigate("Detail")}
-      />
-      <Spacer height={Spacing.lg} />
-    </>
-  );
+  const store = useDataStore();
+
+  useEffect(() => {
+    const preferences = store.getPreferences();
+    if (!preferences.hasCompletedOnboarding) {
+      navigation.navigate("OnboardingCircles");
+    }
+  }, []);
+
+  const handleLogPress = (circleType: CircleType) => {
+    navigation.navigate("LogEvent", { circleType });
+  };
+
+  const preferences = store.getPreferences();
+  const lastInnerEvent = store.getLastInnerEvent();
+  const todayCounts = store.getTodayEventCounts();
 
   return (
-    <ScreenFlatList
-      data={CARD_DATA}
-      renderItem={renderItem}
-      keyExtractor={(item) => item.id}
-    />
+    <ScreenScrollView>
+      <View style={styles.container}>
+        <DaysSinceInnerWidget
+          lastInnerEvent={lastInnerEvent}
+          show={preferences.showDaysSinceInner}
+        />
+        <QuickCircleLogButtons onLogPress={handleLogPress} />
+        <TodaySummary counts={todayCounts} />
+      </View>
+    </ScreenScrollView>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    padding: Spacing.lg,
+    gap: Spacing.lg,
+  },
+});

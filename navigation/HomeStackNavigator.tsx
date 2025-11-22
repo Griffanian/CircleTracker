@@ -1,14 +1,18 @@
 import React from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import HomeScreen from "@/screens/HomeScreen";
-import DetailScreen from "@/screens/DetailScreen";
+import OnboardingCirclesScreen from "@/screens/OnboardingCirclesScreen";
+import LogEventModal from "@/screens/LogEventModal";
 import { HeaderTitle } from "@/components/HeaderTitle";
 import { useTheme } from "@/hooks/useTheme";
 import { getCommonScreenOptions } from "@/navigation/screenOptions";
 
+type CircleType = "inner" | "middle" | "outer";
+
 export type HomeStackParamList = {
   Home: undefined;
-  Detail: undefined;
+  OnboardingCircles: undefined;
+  LogEvent: { circleType: CircleType };
 };
 
 const Stack = createNativeStackNavigator<HomeStackParamList>();
@@ -26,13 +30,24 @@ export default function HomeStackNavigator() {
         name="Home"
         component={HomeScreen}
         options={{
-          headerTitle: () => <HeaderTitle title="My App" />,
+          headerTitle: () => <HeaderTitle title="Circles" />,
         }}
       />
       <Stack.Screen
-        name="Detail"
-        component={DetailScreen}
-        options={{ headerTitle: "Detail" }}
+        name="OnboardingCircles"
+        component={OnboardingCirclesScreen}
+        options={{
+          headerTitle: "Setup Your Circles",
+          presentation: "modal",
+        }}
+      />
+      <Stack.Screen
+        name="LogEvent"
+        component={LogEventModal}
+        options={{
+          headerTitle: "Log Event",
+          presentation: "modal",
+        }}
       />
     </Stack.Navigator>
   );

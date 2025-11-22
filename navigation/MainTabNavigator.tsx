@@ -3,13 +3,17 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Feather } from "@expo/vector-icons";
 import { BlurView } from "expo-blur";
 import { Platform, StyleSheet } from "react-native";
-import HomeStackNavigator from "@/navigation/HomeStackNavigator";
-import ProfileStackNavigator from "@/navigation/ProfileStackNavigator";
 import { useTheme } from "@/hooks/useTheme";
+import HomeStackNavigator from "@/navigation/HomeStackNavigator";
+import TrackerScreen from "@/screens/TrackerScreen";
+import HistoryScreen from "@/screens/HistoryScreen";
+import SettingsScreen from "@/screens/SettingsScreen";
 
 export type MainTabParamList = {
   HomeTab: undefined;
-  ProfileTab: undefined;
+  TrackerTab: undefined;
+  HistoryTab: undefined;
+  SettingsTab: undefined;
 };
 
 const Tab = createBottomTabNavigator<MainTabParamList>();
@@ -54,12 +58,35 @@ export default function MainTabNavigator() {
         }}
       />
       <Tab.Screen
-        name="ProfileTab"
-        component={ProfileStackNavigator}
+        name="TrackerTab"
+        component={TrackerScreen}
         options={{
-          title: "Profile",
+          title: "Tracker",
+          headerShown: true,
           tabBarIcon: ({ color, size }) => (
-            <Feather name="user" size={size} color={color} />
+            <Feather name="bar-chart-2" size={size} color={color} />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="HistoryTab"
+        component={HistoryScreen}
+        options={{
+          title: "History",
+          headerShown: true,
+          tabBarIcon: ({ color, size }) => (
+            <Feather name="clock" size={size} color={color} />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="SettingsTab"
+        component={SettingsScreen}
+        options={{
+          title: "Settings",
+          headerShown: true,
+          tabBarIcon: ({ color, size }) => (
+            <Feather name="settings" size={size} color={color} />
           ),
         }}
       />
