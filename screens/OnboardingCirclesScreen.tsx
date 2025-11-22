@@ -51,6 +51,12 @@ export default function OnboardingCirclesScreen({
           your behaviour.
         </ThemedText>
 
+        <ThemedText style={[styles.subtitle, { color: theme.textSecondary }]}>
+          This app is based on the three circles from 12-Step programs, as many
+          of us have found, this is a very useful tool for noticing patterns and
+          controlling our behaviours.
+        </ThemedText>
+
         <CirclesExplanation />
 
         <View style={styles.divider} />
@@ -109,6 +115,11 @@ const styles = StyleSheet.create({
     fontSize: 22,
     fontWeight: "600",
     lineHeight: 32,
+    marginBottom: Spacing.md,
+  },
+  subtitle: {
+    fontSize: 15,
+    lineHeight: 22,
     marginBottom: Spacing.xl,
   },
   divider: {
