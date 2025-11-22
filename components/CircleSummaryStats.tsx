@@ -12,6 +12,7 @@ interface CircleSummaryStatsProps {
   count30Days: number;
   onPress7Days?: () => void;
   onPress30Days?: () => void;
+  onCirclePress?: () => void;
 }
 
 export function CircleSummaryStats({
@@ -20,6 +21,7 @@ export function CircleSummaryStats({
   count30Days,
   onPress7Days,
   onPress30Days,
+  onCirclePress,
 }: CircleSummaryStatsProps) {
   const { theme } = useTheme();
 
@@ -35,10 +37,17 @@ export function CircleSummaryStats({
         Shadows.card,
       ]}
     >
-      <View style={styles.header}>
+      <Pressable
+        onPress={onCirclePress}
+        disabled={!onCirclePress}
+        style={({ pressed }) => [
+          styles.header,
+          { opacity: pressed && onCirclePress ? 0.7 : 1 },
+        ]}
+      >
         <CircleBadge circleType={circleType} size={32} />
         <ThemedText style={styles.title}>{getCircleLabel()} Circle</ThemedText>
-      </View>
+      </Pressable>
       <View style={styles.stats}>
         <Pressable
           onPress={onPress7Days}

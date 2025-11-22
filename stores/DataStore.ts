@@ -75,6 +75,12 @@ class DataStore {
       timestamp: new Date(),
     };
     this.events.push(newEvent);
+    
+    // If this is an inner circle event, reset the sobriety start date
+    if (event.circleType === "inner") {
+      this.preferences.sobrietyStartDate = new Date();
+    }
+    
     this.notifyListeners();
     return newEvent;
   }

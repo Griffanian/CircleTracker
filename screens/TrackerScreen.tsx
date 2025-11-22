@@ -9,6 +9,9 @@ import { useTheme } from "@/hooks/useTheme";
 import { useNavigation } from "@react-navigation/native";
 import type { BottomTabNavigationProp } from "@react-navigation/bottom-tabs";
 import type { MainTabParamList } from "@/navigation/MainTabNavigator";
+import type { CircleType } from "@/stores/DataStore";
+import type { NavigatorScreenParams } from "@react-navigation/native";
+import type { HomeStackParamList } from "@/navigation/HomeStackNavigator";
 
 type TrackerScreenNavigationProp = BottomTabNavigationProp<MainTabParamList, "TrackerTab">;
 
@@ -17,6 +20,13 @@ export default function TrackerScreen() {
   const navigation = useNavigation<TrackerScreenNavigationProp>();
   const counts7Days = useEventCountsForPeriod(7);
   const counts30Days = useEventCountsForPeriod(30);
+
+  const handleLogEvent = (circleType: CircleType) => {
+    navigation.navigate("HomeTab", {
+      screen: "LogEvent",
+      params: { circleType },
+    } as any);
+  };
 
   return (
     <ScreenScrollView>
@@ -31,6 +41,7 @@ export default function TrackerScreen() {
             circleType="inner"
             count7Days={counts7Days.inner}
             count30Days={counts30Days.inner}
+            onCirclePress={() => handleLogEvent("inner")}
             onPress7Days={() => navigation.navigate("HistoryTab", { circleFilter: "inner", daysFilter: 7 })}
             onPress30Days={() => navigation.navigate("HistoryTab", { circleFilter: "inner", daysFilter: 30 })}
           />
@@ -38,6 +49,7 @@ export default function TrackerScreen() {
             circleType="middle"
             count7Days={counts7Days.middle}
             count30Days={counts30Days.middle}
+            onCirclePress={() => handleLogEvent("middle")}
             onPress7Days={() => navigation.navigate("HistoryTab", { circleFilter: "middle", daysFilter: 7 })}
             onPress30Days={() => navigation.navigate("HistoryTab", { circleFilter: "middle", daysFilter: 30 })}
           />
@@ -45,6 +57,7 @@ export default function TrackerScreen() {
             circleType="outer"
             count7Days={counts7Days.outer}
             count30Days={counts30Days.outer}
+            onCirclePress={() => handleLogEvent("outer")}
             onPress7Days={() => navigation.navigate("HistoryTab", { circleFilter: "outer", daysFilter: 7 })}
             onPress30Days={() => navigation.navigate("HistoryTab", { circleFilter: "outer", daysFilter: 30 })}
           />
