@@ -5,10 +5,12 @@ import { ScreenScrollView } from "@/components/ScreenScrollView";
 import { DaysSinceInnerWidget } from "@/components/DaysSinceInnerWidget";
 import { ConcentriCircles } from "@/components/ConcentriCircles";
 import { TodaySummary } from "@/components/TodaySummary";
+import { ThemedText } from "@/components/ThemedText";
 import { useTodayEventCounts, usePreferences } from "@/hooks/useDataStore";
 import { CircleType } from "@/stores/DataStore";
 import { Spacing } from "@/constants/theme";
 import { HomeStackParamList } from "@/navigation/HomeStackNavigator";
+import { useTheme } from "@/hooks/useTheme";
 
 type HomeScreenProps = {
   navigation: NativeStackNavigationProp<HomeStackParamList, "Home">;
@@ -17,6 +19,7 @@ type HomeScreenProps = {
 export default function HomeScreen({ navigation }: HomeScreenProps) {
   const todayCounts = useTodayEventCounts();
   const preferences = usePreferences();
+  const { theme } = useTheme();
 
   useEffect(() => {
     if (!preferences.hasCompletedOnboarding) {
@@ -38,6 +41,9 @@ export default function HomeScreen({ navigation }: HomeScreenProps) {
   return (
     <ScreenScrollView>
       <View style={styles.container}>
+        <ThemedText style={[styles.instruction, { color: theme.textSecondary }]}>
+          Tap a circle to log a behavior
+        </ThemedText>
         <ConcentriCircles onCirclePress={handleLogPress} />
         <TodaySummary counts={todayCounts} onCirclePress={handleTodaySummaryPress} />
         <DaysSinceInnerWidget
@@ -53,5 +59,10 @@ const styles = StyleSheet.create({
   container: {
     padding: Spacing.lg,
     gap: Spacing.lg,
+  },
+  instruction: {
+    fontSize: 16,
+    textAlign: "center",
+    marginBottom: Spacing.sm,
   },
 });
