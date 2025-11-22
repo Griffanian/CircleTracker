@@ -2,91 +2,83 @@ import { useSyncExternalStore } from "react";
 import { dataStore, CircleType, Behavior } from "@/stores/DataStore";
 
 export function useDataStore() {
-  // Use useSyncExternalStore to reliably subscribe to store changes
-  const version = useSyncExternalStore(
+  // Subscribe to global store changes; we don't actually care about the version
+  useSyncExternalStore(
     (callback) => dataStore.subscribe(callback),
     () => dataStore.getVersion(),
-    () => dataStore.getVersion()
+    () => dataStore.getVersion(),
   );
 
+  // Just return the store API so callers can call store.addBehavior(), etc.
   return dataStore;
 }
 
 export function useBehaviors(circleType?: CircleType): Behavior[] {
-<<<<<<< HEAD
-  const version = useSyncExternalStore(
+  // Re-run this hook whenever the store version changes
+  useSyncExternalStore(
     (callback) => dataStore.subscribe(callback),
     () => dataStore.getVersion(),
-    () => dataStore.getVersion()
+    () => dataStore.getVersion(),
   );
 
-  return dataStore.getBehaviors(circleType);
-=======
-  const [behaviors, setBehaviors] = useState<Behavior[]>(() => 
-    [...dataStore.getBehaviors(circleType)] 
-  );
-
-  useEffect(() => {
-    setBehaviors([...dataStore.getBehaviors(circleType)]);
-    
-    const unsubscribe = dataStore.subscribe(() => {
-      setBehaviors([...dataStore.getBehaviors(circleType)]);
-    });
-    
-    return () => {
-      unsubscribe();
-    };
-  }, [circleType]);
-
-  return behaviors;
->>>>>>> 9ea1f163898ec650616cb96381de1c6590e2d83b
+  // Read the current behaviors from the store.
+  // Spread into a new array to avoid accidental external mutation.
+  return [...dataStore.getBehaviors(circleType)];
 }
 
-export function useTodayEventCounts(): { inner: number; middle: number; outer: number } {
-  const version = useSyncExternalStore(
+export function useTodayEventCounts(): {
+  inner: number;
+  middle: number;
+  outer: number;
+} {
+  useSyncExternalStore(
     (callback) => dataStore.subscribe(callback),
     () => dataStore.getVersion(),
-    () => dataStore.getVersion()
+    () => dataStore.getVersion(),
   );
 
   return dataStore.getTodayEventCounts();
 }
 
 export function useLastInnerEvent() {
-  const version = useSyncExternalStore(
+  useSyncExternalStore(
     (callback) => dataStore.subscribe(callback),
     () => dataStore.getVersion(),
-    () => dataStore.getVersion()
+    () => dataStore.getVersion(),
   );
 
   return dataStore.getLastInnerEvent();
 }
 
-export function useEventCountsForPeriod(days: number): { inner: number; middle: number; outer: number } {
-  const version = useSyncExternalStore(
+export function useEventCountsForPeriod(days: number): {
+  inner: number;
+  middle: number;
+  outer: number;
+} {
+  useSyncExternalStore(
     (callback) => dataStore.subscribe(callback),
     () => dataStore.getVersion(),
-    () => dataStore.getVersion()
+    () => dataStore.getVersion(),
   );
 
   return dataStore.getEventCountsForPeriod(days);
 }
 
 export function usePreferences() {
-  const version = useSyncExternalStore(
+  useSyncExternalStore(
     (callback) => dataStore.subscribe(callback),
     () => dataStore.getVersion(),
-    () => dataStore.getVersion()
+    () => dataStore.getVersion(),
   );
 
   return dataStore.getPreferences();
 }
 
 export function useEvents() {
-  const version = useSyncExternalStore(
+  useSyncExternalStore(
     (callback) => dataStore.subscribe(callback),
     () => dataStore.getVersion(),
-    () => dataStore.getVersion()
+    () => dataStore.getVersion(),
   );
 
   return dataStore.getEvents();
