@@ -1,0 +1,182 @@
+OnboardingCirclesScreen
+
+Purpose: First-time form where user defines inner/middle/outer behaviours.
+
+Contains:
+
+CircleBehaviorEditor (for Inner)
+
+CircleBehaviorEditor (for Middle)
+
+CircleBehaviorEditor (for Outer)
+
+“Next” / “Back” / “Finish” buttons
+
+HomeScreen
+
+Purpose: Snapshot + quick logging.
+
+Contains:
+
+DaysSinceInnerWidget (respects the “show/hide” toggle)
+
+QuickCircleLogButtons (Inner / Middle / Outer)
+
+TodaySummary (counts for today)
+
+Links/buttons to:
+
+Tracker
+
+History
+
+Settings
+
+LogEventScreen / LogEventModal
+
+Purpose: Log one event.
+
+Takes props: circleType ("inner" | "middle" | "outer")
+
+Contains:
+
+Dropdown/list of behaviours for that circle (BehaviorPicker)
+
+Optional note (TextArea)
+
+“Save” button
+
+HistoryScreen
+
+Purpose: Chronological log.
+
+Contains:
+
+Filter bar (All / Inner / Middle / Outer)
+
+EventHistoryList
+
+composed of EventListItems grouped by date
+
+TrackerScreen
+
+Purpose: Basic stats.
+
+Contains:
+
+CircleSummaryStats (counts last 7/30 days)
+
+TopBehaviorsList per circle (optional but easy)
+
+SettingsScreen
+
+Purpose: Preferences + edit circles later.
+
+Contains:
+
+Toggle: ShowDaysSinceInnerToggle
+
+“Edit circles” → reuses OnboardingCirclesScreen or a simpler CirclesManagementScreen
+
+Reusable Components
+
+CircleBehaviorEditor
+
+Props: circleType
+
+Shows:
+
+Text input + “Add behaviour”
+
+List of behaviours (BehaviorListItems with delete/edit)
+
+BehaviorListItem
+
+Shows a single behaviour name (and optional description) + delete icon.
+
+QuickCircleLogButtons
+
+Three buttons:
+
+“Log Inner”
+
+“Log Middle”
+
+“Log Outer”
+
+On press → opens LogEventScreen with circleType pre-set.
+
+DaysSinceInnerWidget
+
+Reads:
+
+last inner-circle event
+
+showDaysSinceInner preference
+
+Shows either “Sober for X days” or nothing.
+
+TodaySummary
+
+Props: counts for each circle today
+
+Simple row: Inner: X | Middle: Y | Outer: Z
+
+EventHistoryList
+
+Takes a list of events and groups them by date.
+
+Renders multiple EventListItems.
+
+EventListItem
+
+Shows:
+
+time
+
+circle label (Inner/Middle/Outer)
+
+behaviour name
+
+note icon (expandable)
+
+CircleSummaryStats
+
+Shows:
+
+Inner/Middle/Outer counts for last 7 days
+
+Same for last 30 days
+
+TopBehaviorsList
+
+For a given circle: behaviours + how many times logged in period.
+
+Layout / Navigation
+
+AppShell or similar:
+
+Header
+
+BottomTabBar with:
+
+Home
+
+Tracker
+
+History
+
+Settings
+
+Core Data Shapes (mentally)
+
+Behavior
+{ id, userId, circleType, name, description? }
+
+Event
+{ id, userId, behaviorId, circleType, timestamp, note? }
+
+UserPreferences
+{ showDaysSinceInner: boolean }
+
+That’s it: those screens + those components are basically your whole MVP. You could literally start by scaffolding these names as empty components and then fill them in one by one.
