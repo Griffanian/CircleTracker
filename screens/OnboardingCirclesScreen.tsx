@@ -4,6 +4,7 @@ import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { ThemedText } from "@/components/ThemedText";
 import { ScreenScrollView } from "@/components/ScreenScrollView";
 import { CircleBehaviorEditor } from "@/components/CircleBehaviorEditor";
+import { CirclesExplanation } from "@/components/CirclesExplanation";
 import { useDataStore, useBehaviors } from "@/hooks/useDataStore";
 import { CircleType } from "@/stores/DataStore";
 import { Spacing, BorderRadius } from "@/constants/theme";
@@ -45,11 +46,24 @@ export default function OnboardingCirclesScreen({
   return (
     <ScreenScrollView>
       <View style={styles.container}>
+        <ThemedText style={styles.welcomeTitle}>
+          Welcome! Congratulations on taking this next step towards controlling
+          your behaviour.
+        </ThemedText>
+
+        <ThemedText style={[styles.subtitle, { color: theme.textSecondary }]}>
+          This app is based on the three circles from 12-Step programs, as many
+          of us have found, this is a very useful tool for noticing patterns and
+          controlling our behaviours.
+        </ThemedText>
+
+        <CirclesExplanation />
+
+        <View style={styles.divider} />
+
         <ThemedText style={styles.title}>Setup Your Circles</ThemedText>
         <ThemedText style={[styles.description, { color: theme.textSecondary }]}>
-          Define behaviors for each circle. Inner circle represents behaviors to
-          avoid, middle circle represents caution areas, and outer circle
-          represents healthy behaviors.
+          Add behaviors for each circle to personalize your tracking.
         </ThemedText>
 
         <View style={styles.editors}>
@@ -85,7 +99,7 @@ export default function OnboardingCirclesScreen({
           ]}
         >
           <ThemedText style={[styles.buttonText, { color: "#FFFFFF" }]}>
-            {canFinish ? "Finish Setup" : "Add at least one behavior"}
+            {canFinish ? "Get Started" : "Add at least one behavior"}
           </ThemedText>
         </Pressable>
       </View>
@@ -96,6 +110,22 @@ export default function OnboardingCirclesScreen({
 const styles = StyleSheet.create({
   container: {
     padding: Spacing.lg,
+  },
+  welcomeTitle: {
+    fontSize: 22,
+    fontWeight: "600",
+    lineHeight: 32,
+    marginBottom: Spacing.md,
+  },
+  subtitle: {
+    fontSize: 15,
+    lineHeight: 22,
+    marginBottom: Spacing.xl,
+  },
+  divider: {
+    height: 1,
+    backgroundColor: "#E5E7EB",
+    marginVertical: Spacing.xl,
   },
   title: {
     fontSize: 24,
