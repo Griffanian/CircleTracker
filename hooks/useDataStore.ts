@@ -5,23 +5,14 @@ export function useDataStore() {
   const [updateCount, setUpdateCount] = useState(0);
 
   useEffect(() => {
-    console.log("[useDataStore] Component subscribing to store");
     const unsubscribe = dataStore.subscribe(() => {
-      console.log("[useDataStore] Store changed, forcing update");
-      setUpdateCount((prev) => {
-        const newCount = prev + 1;
-        console.log("[useDataStore] Update count:", newCount);
-        return newCount;
-      });
+      setUpdateCount((prev) => prev + 1);
     });
     return () => {
-      console.log("[useDataStore] Component unsubscribing from store");
       unsubscribe();
     };
   }, []);
 
-  // Force re-evaluation by referencing updateCount
-  console.log("[useDataStore] Returning store, update count:", updateCount);
   return dataStore;
 }
 
@@ -31,9 +22,12 @@ export function useBehaviors(circleType?: CircleType): Behavior[] {
   );
 
   useEffect(() => {
+    setBehaviors(dataStore.getBehaviors(circleType));
+    
     const unsubscribe = dataStore.subscribe(() => {
       setBehaviors(dataStore.getBehaviors(circleType));
     });
+    
     return () => {
       unsubscribe();
     };

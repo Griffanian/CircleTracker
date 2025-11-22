@@ -21,12 +21,10 @@ export default function OnboardingCirclesScreen({
   const store = useDataStore();
 
   const handleAddBehavior = (circleType: CircleType, name: string) => {
-    console.log("[OnboardingScreen] Adding behavior:", circleType, name);
     store.addBehavior({ circleType, name });
   };
 
   const handleDeleteBehavior = (id: string) => {
-    console.log("[OnboardingScreen] Deleting behavior:", id);
     store.deleteBehavior(id);
   };
 
@@ -38,12 +36,6 @@ export default function OnboardingCirclesScreen({
   const innerBehaviors = useBehaviors("inner");
   const middleBehaviors = useBehaviors("middle");
   const outerBehaviors = useBehaviors("outer");
-  
-  console.log("[OnboardingScreen] Render - behaviors count:", {
-    inner: innerBehaviors.length,
-    middle: middleBehaviors.length,
-    outer: outerBehaviors.length
-  });
 
   const canFinish =
     innerBehaviors.length > 0 ||
