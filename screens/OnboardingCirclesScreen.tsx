@@ -79,15 +79,16 @@ export default function OnboardingCirclesScreen({
     <ScreenScrollView>
       <View style={styles.container}>
         <ThemedText style={styles.welcomeTitle}>
-          Welcome! {"\n"}
+          Welcome!
+        </ThemedText>
+        <ThemedText style={styles.welcomeTitle}>
           Congratulations on taking this next step towards controlling
           your behaviour.
         </ThemedText>
 
         <ThemedText style={[styles.subtitle, { color: theme.textSecondary }]}>
-          This app is based on The Three Circles from 12-Step programs. Many
-          of us who have walked the steps have found this to be a very useful tool for noticing patterns and
-          controlling our behaviours.
+          This app is based on The Three Circles from 12-Step programs. Many of us who have walked the steps have found this to be a very useful tool for noticing patterns and
+          controlling our behaviours. However this app is not designed only for addicts, it is for anyone looking to understand and manage their behaviors better.
         </ThemedText>
 
         <ThemedText style={styles.CirclesTitle}>
@@ -235,6 +236,14 @@ export default function OnboardingCirclesScreen({
             {canFinish ? "Get Started" : "Add at least one behavior"}
           </ThemedText>
         </Pressable>
+          <ThemedText style={[styles.subtitle, { color: theme.textSecondary }]}>
+            {"\n"}
+            Please note that this app is not a substitute for professional help.
+            {"\n"}{"\n"}
+            This app is entirely anonymous, free, and without ads. 
+            {"\n"}{"\n"}
+            Please see the Section in the Setting Tab about the Seventh tradition if you would like to support ongoing development.
+          </ThemedText>
       </View>
     </ScreenScrollView>
   );

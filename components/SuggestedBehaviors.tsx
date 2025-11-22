@@ -12,12 +12,13 @@ interface SuggestedBehaviorsProps {
 
 const SUGGESTIONS: Record<CircleType, string[]> = {
   inner: [
-    "Using substances",
-    "Acting out sexually",
-    "Gambling",
-    "Lying",
-    "Stealing",
-    "Physical violence",
+    "Consuming Explicit Content",
+    "Spending money Impulsively",
+    "Using Substances",
+    "Binge Eating",
+    "Purging",
+    "Self-harm",
+    "Compulsive Masturbation"
   ],
   middle: [
     "Excessive social media",
