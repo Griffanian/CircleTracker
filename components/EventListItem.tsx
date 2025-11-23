@@ -23,13 +23,13 @@ export function EventListItem({ event, behavior, onDelete }: EventListItemProps)
 
   const handleDelete = () => {
     if (Platform.OS === "web") {
-      if (window.confirm("Are you sure you want to delete this event?")) {
+      if (window.confirm("Are you sure you want to delete this behaviour?")) {
         onDelete(event.id);
       }
     } else {
       Alert.alert(
         "Delete Event",
-        "Are you sure you want to delete this event?",
+        "Are you sure you want to delete this behaviour?",
         [
           { text: "Cancel", style: "cancel" },
           { 

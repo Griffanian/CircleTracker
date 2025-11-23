@@ -47,13 +47,13 @@ export default function LogEventModal({ route, navigation }: LogEventModalProps)
   };
   const handleDeleteBehavior = async (id: string) => {
      if (Platform.OS === "web") {
-      if (window.confirm("Are you sure you want to delete this event?")) {
+      if (window.confirm("Are you sure you want to delete this behaviour?")) {
         await store.deleteBehavior(id);
       }
     } else {
       Alert.alert(
         "Delete Event",
-        "Are you sure you want to delete this event?",
+        "Are you sure you want to delete this behaviour?",
         [
           { text: "Cancel", style: "cancel" },
           { 
