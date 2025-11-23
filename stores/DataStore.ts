@@ -47,6 +47,13 @@ class DataStore {
     try {
       await this.loadFromStorage();
       this.isInitialized = true;
+
+      // Ensure any subscribers mounted before initialization are notified
+      // that the store has data available. We increment the version and
+      // call listeners directly to trigger updates without forcing an
+      // immediate save-to-storage here.
+      this.version++;
+      this.listeners.forEach((listener) => listener());
     } catch (error) {
       console.error('Failed to initialize DataStore:', error);
     }
