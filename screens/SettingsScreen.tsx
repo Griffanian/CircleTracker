@@ -77,30 +77,6 @@ export default function SettingsScreen() {
             <ThemedText style={styles.buttonText}>Edit Circle Behaviors</ThemedText>
           </Pressable>
         </View>
-
-        <View style={styles.section}>
-          <ThemedText style={styles.sectionTitle}>About</ThemedText>
-          <View
-            style={[
-              styles.infoCard,
-              {
-                backgroundColor: theme.backgroundDefault,
-                borderColor: theme.border,
-              },
-            ]}
-          >
-            <ThemedText style={styles.appName}>Circles</ThemedText>
-            <ThemedText style={[styles.version, { color: theme.textSecondary }]}>
-              Version 1.0.0
-            </ThemedText>
-            <ThemedText
-              style={[styles.description, { color: theme.textSecondary }]}
-            >
-              A behavioral tracking app to help you monitor and improve your
-              habits across inner, middle, and outer circles.
-            </ThemedText>
-          </View>
-        </View>
         <View style={styles.section}>
           <ThemedText style={styles.sectionTitle}>The Seventh Tradition</ThemedText>
           <View
@@ -140,6 +116,31 @@ export default function SettingsScreen() {
             </Pressable>
           </View>
         </View>
+
+        <View style={styles.section}>
+          <ThemedText style={styles.sectionTitle}>About</ThemedText>
+          <View
+            style={[
+              styles.infoCard,
+              {
+                backgroundColor: theme.backgroundDefault,
+                borderColor: theme.border,
+              },
+            ]}
+          >
+            <ThemedText style={styles.appName}>Circles</ThemedText>
+            <ThemedText style={[styles.version, { color: theme.textSecondary }]}>
+              Version 1.0.1
+            </ThemedText>
+            <ThemedText
+              style={[styles.description, { color: theme.textSecondary }]}
+            >
+              A behavioral tracking app to help you monitor and improve your
+              habits across inner, middle, and outer circles.
+            </ThemedText>
+          </View>
+        </View>
+
       </View>
     </ScreenScrollView>
   );
