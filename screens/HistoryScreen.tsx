@@ -36,13 +36,14 @@ export default function HistoryScreen() {
   }, [route.params]);
 
   const handleDeleteEvent = async (eventId: string) => {
-    await store.deleteEvent(eventId);
-    
-    // Reload the app after deletion
-    if (Platform.OS === "web") {
-      window.location.reload();
-    } else {
-      await reloadAppAsync();
+    try {
+      await store.deleteEvent(eventId);
+      // The UI subscribes to the data store via `useDataStore` and
+      // will update automatically when the store changes. No full
+      // app reload/navigation should be required.
+    } catch (err) {
+      // swallow or log — preserve user on this screen
+      console.warn("Failed to delete event", err);
     }
   };
 
