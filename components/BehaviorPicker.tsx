@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, StyleSheet, Pressable, ScrollView, TextInput } from "react-native";
+import { View, StyleSheet, Pressable, ScrollView, TextInput, Alert } from "react-native";
 import { Feather } from "@expo/vector-icons";
 import { ThemedText } from "@/components/ThemedText";
 import { Behavior, CircleType } from "@/stores/DataStore";
@@ -12,14 +12,15 @@ interface BehaviorPickerProps {
   selectedBehaviorId: string | null;
   onSelect: (behaviorId: string) => void;
   onCreateCustom?: (name: string) => void;
+  onDelete?: (id: string) => void;
 }
 
 export function BehaviorPicker({
-  circleType,
   behaviors,
   selectedBehaviorId,
   onSelect,
   onCreateCustom,
+  onDelete,
 }: BehaviorPickerProps) {
   const { theme } = useTheme();
   const [showCustomInput, setShowCustomInput] = useState(false);
@@ -37,10 +38,9 @@ export function BehaviorPicker({
     <View>
       <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
         {behaviors.map((behavior) => (
-          <Pressable
+          <View
             key={behavior.id}
-            onPress={() => onSelect(behavior.id)}
-            style={({ pressed }) => [
+            style={[
               styles.option,
               {
                 backgroundColor:
@@ -48,19 +48,38 @@ export function BehaviorPicker({
                     ? theme.backgroundSecondary
                     : theme.backgroundDefault,
                 borderColor: theme.border,
-                opacity: pressed ? 0.7 : 1,
               },
             ]}
           >
-            <ThemedText style={styles.optionText}>{behavior.name}</ThemedText>
-            {behavior.description ? (
-              <ThemedText
-                style={[styles.description, { color: theme.textSecondary }]}
+            <Pressable
+              onPress={() => onSelect(behavior.id)}
+              style={({ pressed }) => [
+                { flex: 1, opacity: pressed ? 0.7 : 1 },
+              ]}
+            >
+              <ThemedText style={styles.optionText}>{behavior.name}</ThemedText>
+              {behavior.description ? (
+                <ThemedText
+                  style={[styles.description, { color: theme.textSecondary }]}
+                >
+                  {behavior.description}
+                </ThemedText>
+              ) : null}
+            </Pressable>
+
+            {/** Delete button shown when `onDelete` prop is provided */}
+            {typeof onDelete === "function" ? (
+              <Pressable
+                onPress={() => onDelete(behavior.id)}
+                style={({ pressed }) => [
+                  styles.deleteButton,
+                  { opacity: pressed ? 0.6 : 1 },
+                ]}
               >
-                {behavior.description}
-              </ThemedText>
+                <Feather name="trash-2" size={18} color={theme.textSecondary} />
+              </Pressable>
             ) : null}
-          </Pressable>
+          </View>
         ))}
 
         {onCreateCustom ? (
@@ -172,6 +191,15 @@ const styles = StyleSheet.create({
     borderRadius: BorderRadius.sm,
     borderWidth: 1,
     marginBottom: Spacing.sm,
+    flexDirection: "row",
+    alignItems: "flex-start",
+  },
+  deleteButton: {
+    marginLeft: Spacing.sm,
+    padding: 6,
+    borderRadius: BorderRadius.sm,
+    alignItems: "center",
+    justifyContent: "center",
   },
   optionText: {
     fontSize: 16,

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, StyleSheet, Pressable, TextInput } from "react-native";
+import { View, StyleSheet, Pressable, TextInput, Alert, Platform } from "react-native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { ThemedText } from "@/components/ThemedText";
 import { ScreenKeyboardAwareScrollView } from "@/components/ScreenKeyboardAwareScrollView";
@@ -30,8 +30,8 @@ export default function LogEventModal({ route, navigation }: LogEventModalProps)
   // Use the reactive hook so the list updates when a new behavior is added
   const behaviors = useBehaviors(circleType);
 
-  const handleCreateCustomBehavior = (name: string) => {
-    const newBehavior = store.addBehavior({ circleType, name });
+  const handleCreateCustomBehavior = async (name: string) => {
+    const newBehavior = await store.addBehavior({ circleType, name });
     setSelectedBehaviorId(newBehavior.id);
   };
 
@@ -44,6 +44,27 @@ export default function LogEventModal({ route, navigation }: LogEventModalProps)
       });
       navigation.goBack();
     }
+  };
+  const handleDeleteBehavior = async (id: string) => {
+     if (Platform.OS === "web") {
+      if (window.confirm("Are you sure you want to delete this event?")) {
+        await store.deleteBehavior(id);
+      }
+    } else {
+      Alert.alert(
+        "Delete Event",
+        "Are you sure you want to delete this event?",
+        [
+          { text: "Cancel", style: "cancel" },
+          { 
+            text: "Delete", 
+            style: "destructive",
+            onPress: async () => await store.deleteBehavior(id)
+          },
+        ]
+      );
+    }
+    
   };
 
   const getCircleLabel = () => {
@@ -66,6 +87,7 @@ export default function LogEventModal({ route, navigation }: LogEventModalProps)
             selectedBehaviorId={selectedBehaviorId}
             onSelect={setSelectedBehaviorId}
             onCreateCustom={handleCreateCustomBehavior}
+            onDelete={handleDeleteBehavior}
           />
         </View>
 
