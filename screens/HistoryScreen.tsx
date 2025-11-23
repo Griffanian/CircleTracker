@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { View, StyleSheet, Pressable, Platform } from "react-native";
-import { reloadAppAsync } from "expo";
 import { ThemedText } from "@/components/ThemedText";
 import { EventListItem } from "@/components/EventListItem";
 import { ScreenSectionList } from "@/components/ScreenSectionList";
-import { useDataStore } from "@/hooks/useDataStore";
+import { useDataStore, useBehaviors, useEvents } from "@/hooks/useDataStore";
 import { Event, CircleType } from "@/stores/DataStore";
 import { Spacing, BorderRadius } from "@/constants/theme";
 import { useTheme } from "@/hooks/useTheme";
@@ -22,6 +21,8 @@ type EventSection = {
 export default function HistoryScreen() {
   const { theme } = useTheme();
   const store = useDataStore();
+  const behaviors = useBehaviors();
+  const events = useEvents();
   const route = useRoute<RouteProp<MainTabParamList, "HistoryTab">>();
   const [filter, setFilter] = useState<FilterType>(route.params?.circleFilter || "all");
   const [daysFilter, setDaysFilter] = useState<DaysFilterType>(route.params?.daysFilter || "all");
@@ -47,7 +48,6 @@ export default function HistoryScreen() {
     }
   };
 
-  const events = store.getEvents();
   
   const applyFilters = (events: Event[]) => {
     let result = events;
@@ -165,11 +165,10 @@ export default function HistoryScreen() {
   return (
     <ScreenSectionList<Event, EventSection>
       sections={sections}
+      extraData={[behaviors, events]}
       keyExtractor={(item) => item.id}
       renderItem={({ item }) => {
-        const behavior = store
-          .getBehaviors()
-          .find((b) => b.id === item.behaviorId);
+        const behavior = behaviors.find((b) => b.id === item.behaviorId);
         return (
           <View style={{ marginBottom: Spacing.sm }}>
             <EventListItem event={item} behavior={behavior} onDelete={handleDeleteEvent} />

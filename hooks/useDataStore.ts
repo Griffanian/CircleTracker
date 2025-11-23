@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef, useSyncExternalStore } from "react";
-import { dataStore, CircleType, Behavior } from "@/stores/DataStore";
+import { dataStore, CircleType, Behavior, Event } from "@/stores/DataStore";
 
 export function useDataStore() {
   // Use useSyncExternalStore to reliably subscribe to store changes
@@ -104,4 +104,22 @@ export function usePreferences() {
   }, []);
 
   return preferences;
+}
+
+export function useEvents(): Event[] {
+  const [events, setEvents] = useState<Event[]>(() => dataStore.getEvents());
+
+  useEffect(() => {
+    setEvents(dataStore.getEvents());
+
+    const unsubscribe = dataStore.subscribe(() => {
+      setEvents(dataStore.getEvents());
+    });
+
+    return () => {
+      unsubscribe();
+    };
+  }, []);
+
+  return events;
 }
