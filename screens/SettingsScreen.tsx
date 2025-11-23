@@ -3,7 +3,7 @@ import { View, StyleSheet, Switch, Pressable } from "react-native";
 import { CommonActions, useNavigation } from "@react-navigation/native";
 import { ScreenScrollView } from "@/components/ScreenScrollView";
 import { ThemedText } from "@/components/ThemedText";
-import { useDataStore } from "@/hooks/useDataStore";
+import { useDataStore, usePreferences } from "@/hooks/useDataStore";
 import { Spacing, BorderRadius } from "@/constants/theme";
 import { useTheme } from "@/hooks/useTheme";
 
@@ -11,7 +11,7 @@ export default function SettingsScreen() {
   const { theme } = useTheme();
   const store = useDataStore();
   const navigation = useNavigation();
-  const preferences = store.getPreferences();
+  const preferences = usePreferences();
 
   const handleToggleShowDays = async (value: boolean) => {
     await store.updatePreferences({ showDaysSinceInner: value });

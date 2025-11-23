@@ -1,12 +1,13 @@
 import React from "react";
 import { View, StyleSheet, Pressable, ScrollView } from "react-native";
 import { ThemedText } from "@/components/ThemedText";
-import { CircleType } from "@/stores/DataStore";
+import { CircleType, Behavior } from "@/stores/DataStore";
 import { Spacing, BorderRadius } from "@/constants/theme";
 import { useTheme } from "@/hooks/useTheme";
 
 interface SuggestedBehaviorsProps {
   circleType: CircleType;
+  behaviors: Behavior[];
   onSelect: (behaviorName: string) => void;
 }
 
@@ -42,10 +43,16 @@ const SUGGESTIONS: Record<CircleType, string[]> = {
 
 export function SuggestedBehaviors({
   circleType,
+  behaviors,
   onSelect,
 }: SuggestedBehaviorsProps) {
   const { theme } = useTheme();
   const suggestions = SUGGESTIONS[circleType];
+
+  const existing = behaviors.map((b) => b.name.toLowerCase());
+  const filteredSuggestions = suggestions.filter(
+    (s) => !existing.includes(s.toLowerCase())
+  );
 
   const getCircleColor = () => {
     switch (circleType) {
@@ -68,7 +75,7 @@ export function SuggestedBehaviors({
         showsHorizontalScrollIndicator={false}
         contentContainerStyle={styles.scrollContent}
       >
-        {suggestions.map((suggestion, index) => (
+        {filteredSuggestions.map((suggestion, index) => (
           <Pressable
             key={index}
             onPress={() => onSelect(suggestion)}

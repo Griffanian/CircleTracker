@@ -68,6 +68,7 @@ export function CircleBehaviorEditor({
 
       <SuggestedBehaviors
         circleType={circleType}
+        behaviors={behaviors}
         onSelect={handleSuggestionSelect}
       />
 

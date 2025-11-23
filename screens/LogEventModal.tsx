@@ -5,7 +5,7 @@ import { ThemedText } from "@/components/ThemedText";
 import { ScreenKeyboardAwareScrollView } from "@/components/ScreenKeyboardAwareScrollView";
 import { BehaviorPicker } from "@/components/BehaviorPicker";
 import { CircleBadge } from "@/components/CircleBadge";
-import { useDataStore } from "@/hooks/useDataStore";
+import { useDataStore, useBehaviors } from "@/hooks/useDataStore";
 import { CircleType } from "@/stores/DataStore";
 import { Spacing, BorderRadius } from "@/constants/theme";
 import { useTheme } from "@/hooks/useTheme";
@@ -24,16 +24,14 @@ export default function LogEventModal({ route, navigation }: LogEventModalProps)
   const { circleType } = route.params;
   const { theme } = useTheme();
   const store = useDataStore();
-  const behaviors = store.getBehaviors(circleType);
-  
-  const [selectedBehaviorId, setSelectedBehaviorId] = useState<string | null>(
-    // Auto-select if there's only one behavior
-    behaviors.length === 1 ? behaviors[0].id : null
-  );
+  const [selectedBehaviorId, setSelectedBehaviorId] = useState<string | null>(null);
   const [note, setNote] = useState("");
 
-  const handleCreateCustomBehavior = async (name: string) => {
-    const newBehavior = await store.addBehavior({ circleType, name });
+  // Use the reactive hook so the list updates when a new behavior is added
+  const behaviors = useBehaviors(circleType);
+
+  const handleCreateCustomBehavior = (name: string) => {
+    const newBehavior = store.addBehavior({ circleType, name });
     setSelectedBehaviorId(newBehavior.id);
   };
 
